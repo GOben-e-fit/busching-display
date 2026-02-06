@@ -1,233 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta http-equiv="refresh" content="30">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=1920">
 <title>Busching Autoteile</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #111111;
+  color: #ffffff;
   width: 1920px;
   height: 1080px;
   overflow: hidden;
-  background: #1a1a2e;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #ffffff;
+  padding: 40px 50px;
 }
-.container {
-  display: -webkit-flex;
-  display: flex;
-  width: 1920px;
-  height: 1080px;
-}
-.left {
-  width: 1200px;
-  height: 1080px;
-  padding: 60px 80px;
+.main {
+  width: 100%;
+  height: 100%;
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
 }
-.right {
-  width: 720px;
-  height: 1080px;
-  background: #16213e;
-  padding: 60px 50px;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  -webkit-align-items: center;
-  align-items: center;
-}
-.status-badge {
-  display: inline-block;
-  padding: 16px 60px;
-  border-radius: 16px;
-  font-size: 64px;
-  font-weight: bold;
-  letter-spacing: 4px;
-  margin-bottom: 40px;
-}
-.status-open {
-  background: #27ae60;
-  color: #ffffff;
-}
-.status-closed {
-  background: #c0392b;
-  color: #ffffff;
-}
-.status-warning {
-  background: #f39c12;
-  color: #1a1a2e;
-}
-.status-holiday {
-  background: #8e44ad;
-  color: #ffffff;
-}
-.info-text {
-  font-size: 28px;
-  color: #b0b0b0;
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-.highlight-text {
-  font-size: 34px;
-  color: #f0c040;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-.section-title {
-  font-size: 36px;
-  font-weight: bold;
-  color: #f0c040;
-  margin-top: 30px;
-  margin-bottom: 16px;
-  border-bottom: 2px solid #f0c040;
-  padding-bottom: 8px;
-}
-.hours-row {
+.header {
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: space-between;
   justify-content: space-between;
-  font-size: 30px;
-  color: #e0e0e0;
-  margin-bottom: 12px;
-  padding: 6px 0;
-}
-.hours-day {
-  font-weight: bold;
-  color: #ffffff;
-}
-.hours-time {
-  color: #f0c040;
-}
-.emergency-box {
-  margin-top: 30px;
-  padding: 20px 30px;
-  background: #2c1810;
-  border: 2px solid #f39c12;
-  border-radius: 12px;
-}
-.emergency-text {
-  font-size: 26px;
-  color: #f39c12;
-  line-height: 1.6;
-}
-.logo-img {
-  width: 280px;
-  height: auto;
+  -webkit-align-items: center;
+  align-items: center;
   margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #333333;
 }
-.contact-section {
-  width: 100%;
-  margin-top: 20px;
-}
-.contact-title {
-  font-size: 32px;
+.logo { height: 140px; width: auto; }
+.status {
+  font-size: 64px;
   font-weight: bold;
-  color: #f0c040;
-  margin-bottom: 16px;
-  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  padding: 20px 50px;
+  border: 4px solid;
+  border-radius: 16px;
 }
-.contact-item {
-  font-size: 26px;
-  color: #e0e0e0;
-  margin-bottom: 14px;
-  text-align: center;
-  line-height: 1.4;
+.status-open {
+  color: #00cc66;
+  border-color: #00cc66;
+  text-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
 }
-.contact-value {
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 28px;
+.status-closed {
+  color: #ff3355;
+  border-color: #ff3355;
+  text-shadow: 0 0 20px rgba(255, 51, 85, 0.4);
 }
-.address-text {
-  font-size: 22px;
-  color: #a0a0a0;
-  text-align: center;
-  margin-top: 20px;
-  line-height: 1.5;
+.status-warning {
+  color: #ffaa00;
+  border-color: #ffaa00;
+  text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
 }
-.custom-message {
-  font-size: 36px;
-  color: #ffffff;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-.spacer {
+.content {
+  display: -webkit-flex;
+  display: flex;
   -webkit-flex: 1;
   flex: 1;
+  gap: 40px;
 }
-.note-text {
-  font-size: 24px;
-  color: #a0a0a0;
+.col-left {
+  -webkit-flex: 1.2;
+  flex: 1.2;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  gap: 25px;
+}
+.col-right {
+  -webkit-flex: 1;
+  flex: 1;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  gap: 25px;
+}
+.panel {
+  background: #1a1a1a;
+  border: 1px solid #333333;
+  border-radius: 16px;
+  padding: 30px 35px;
+}
+.panel-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #333333;
+}
+.hours-row {
+  font-size: 30px;
+  line-height: 1.9;
+  margin-bottom: 4px;
+}
+.day-label {
+  color: #ffd700;
+  font-weight: bold;
+  display: inline-block;
+  width: 160px;
+}
+.time-val { color: #ffffff; }
+.company-name {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+.contact-line {
+  font-size: 28px;
+  line-height: 1.8;
+  color: #cccccc;
+}
+.contact-highlight {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 32px;
+  display: block;
+  margin-top: 15px;
+}
+.notice {
+  background: #1a1a0a;
+  border-left: 5px solid #ffd700;
+  border-radius: 12px;
+  padding: 20px 30px;
+  font-size: 26px;
+  color: #ffd700;
   line-height: 1.5;
-  margin-top: 16px;
+}
+.emergency {
+  background: #1a0a0a;
+  border-left: 5px solid #ff3355;
+  border-radius: 12px;
+  padding: 20px 30px;
+}
+.emergency-title {
+  color: #ff3355;
+  font-weight: bold;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.emergency-details {
+  color: #ffffff;
+  font-size: 28px;
+  line-height: 1.6;
+}
+.reopen-text {
+  font-size: 42px;
+  font-weight: bold;
+  color: #00cc66;
+  text-align: center;
+  line-height: 1.5;
+  padding: 20px 0;
+}
+.reopen-text.warning { color: #ffaa00; }
+.subtitle-text {
+  font-size: 28px;
+  color: #999999;
+  text-align: center;
+  margin-top: 15px;
+}
+.custom-msg {
+  font-size: 36px;
+  line-height: 1.6;
+  text-align: center;
+  color: #ffffff;
+  padding: 20px 0;
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="left">
-    <div class="status-badge status-open">GEOEFFNET</div>
-
-    <div class="section-title">Oeffnungszeiten</div>
-
-    <div class="hours-row">
-      <span class="hours-day">Montag</span>
-      <span class="hours-time">10:00 - 13:00 &amp; 14:00 - 18:00 Uhr</span>
-    </div>
-
-    <div class="hours-row">
-      <span class="hours-day">Dienstag - Freitag</span>
-      <span class="hours-time">09:00 - 13:00 &amp; 14:00 - 18:00 Uhr</span>
-    </div>
-
-    <div class="note-text">
-      Darueber hinaus oeffnen wir bei Bedarf (z.B. bei Frostwetter)<br>
-      oder nach telefonischer Vereinbarung.
-    </div>
-
-    <div class="emergency-box">
-      <div class="emergency-text">
-        In dringenden Faellen erreichen Sie uns unter:<br>
-        Tel. 030 - 342 20 23 | info@busching-autoteile.com
-      </div>
-    </div>
+<div class="main">
+  <div class="header">
+    <div class="status status-open">GEOEFFNET</div>
+    <img src="logo.png" alt="Busching" class="logo">
   </div>
-
-  <div class="right">
-    <img class="logo-img" src="logo.png" alt="Busching Autoteile">
-
-    <div class="contact-section">
-      <div class="contact-title">Kontakt</div>
-
-      <div class="contact-item">
-        Telefon<br>
-        <span class="contact-value">030 - 342 20 23</span>
-      </div>
-
-      <div class="contact-item">
-        E-Mail<br>
-        <span class="contact-value">info@busching-autoteile.com</span>
-      </div>
-
-      <div class="address-text">
-        Busching Autoteile GmbH<br>
+  <div class="content">
+    <div class="col-left">
+    
+    <div class="panel">
+      <div class="panel-title">Oeffnungszeiten</div>
+      <div class="hours-row"><span class="day-label">Montag:</span> <span class="time-val">10:00 - 13:00</span></div>
+      <div class="hours-row"><span class="day-label"></span> <span class="time-val">14:00 - 18:00 Uhr</span></div>
+      <div class="hours-row" style="margin-top:10px;"><span class="day-label">Di - Fr:</span> <span class="time-val">9:00 - 13:00</span></div>
+      <div class="hours-row"><span class="day-label"></span> <span class="time-val">14:00 - 18:00 Uhr</span></div>
+    </div>
+    <div class="notice">
+      Darueber hinaus oeffnen wir bei Bedarf (z.B. bei Frostwetter) oder nach telefonischer Vereinbarung.
+    </div></div>
+    <div class="col-right">
+    <div class="panel" style="text-align:center;">
+      <img src="logo.png" alt="Busching" class="logo" style="margin-bottom:20px;">
+      <div class="company-name">Busching Autoteile GmbH</div>
+      <div class="contact-line">
         Otto-Suhr-Allee 29<br>
-        10585 Berlin - Charlottenburg
+        10585 Berlin-Charlottenburg
+        <span class="contact-highlight">Tel. 030 - 342 20 23</span>
+        <span class="contact-highlight" style="font-size:28px;">info@busching-autoteile.com</span>
       </div>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="address-text">
-      Immer das passende Teil
-    </div>
+    </div></div>
   </div>
 </div>
 </body>
