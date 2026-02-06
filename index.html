@@ -51,16 +51,6 @@ body {
   border-color: #00cc66;
   text-shadow: 0 0 20px rgba(0, 204, 102, 0.4);
 }
-.status-closed {
-  color: #ff3355;
-  border-color: #ff3355;
-  text-shadow: 0 0 20px rgba(255, 51, 85, 0.4);
-}
-.status-warning {
-  color: #ffaa00;
-  border-color: #ffaa00;
-  text-shadow: 0 0 20px rgba(255, 170, 0, 0.4);
-}
 .content {
   display: -webkit-flex;
   display: flex;
@@ -143,77 +133,27 @@ body {
   color: #ffd700;
   line-height: 1.5;
 }
-.emergency {
-  background: #1a0a0a;
-  border-left: 5px solid #ff3355;
-  border-radius: 12px;
-  padding: 20px 30px;
-}
-.emergency-title {
-  color: #ff3355;
-  font-weight: bold;
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-.emergency-details {
-  color: #ffffff;
-  font-size: 28px;
-  line-height: 1.6;
-}
-.reopen-text {
-  font-size: 42px;
-  font-weight: bold;
-  color: #00cc66;
-  text-align: center;
-  line-height: 1.5;
-  padding: 20px 0;
-}
-.reopen-text.warning { color: #ffaa00; }
-.subtitle-text {
-  font-size: 28px;
-  color: #999999;
-  text-align: center;
-  margin-top: 15px;
-}
-.custom-msg {
-  font-size: 36px;
-  line-height: 1.6;
-  text-align: center;
-  color: #ffffff;
-  padding: 20px 0;
-}
 </style>
 </head>
 <body>
 <div class="main">
   <div class="header">
-    <div class="status status-closed">GESCHLOSSEN</div>
+    <div class="status status-open">GEOEFFNET</div>
     <img src="logo.png" alt="Busching" class="logo">
   </div>
   <div class="content">
     <div class="col-left">
     <div class="panel">
-      <div class="panel-title" style="font-size:42px;color:#ff3355;text-align:center;">Weihnachten</div>
-      <div class="reopen-text">Wir sind am Dienstag, 7. Januar<br>wieder fuer Sie da</div>
-    </div>
-    
-    <div class="emergency">
-      <div class="emergency-title">In dringenden Faellen erreichbar:</div>
-      <div class="emergency-details">
-        Tel. 030 - 342 20 23<br>
-        info@busching-autoteile.com
-      </div>
-    </div></div>
-    <div class="col-right">
-    
-    <div class="panel">
-      <div class="panel-title">Regulaere Oeffnungszeiten</div>
+      <div class="panel-title">Oeffnungszeiten</div>
       <div class="hours-row"><span class="day-label">Montag:</span> <span class="time-val">10:00 - 13:00</span></div>
       <div class="hours-row"><span class="day-label"></span> <span class="time-val">14:00 - 18:00 Uhr</span></div>
       <div class="hours-row" style="margin-top:10px;"><span class="day-label">Di - Fr:</span> <span class="time-val">9:00 - 13:00</span></div>
       <div class="hours-row"><span class="day-label"></span> <span class="time-val">14:00 - 18:00 Uhr</span></div>
     </div>
-    
+    <div class="notice">
+      Darueber hinaus oeffnen wir bei Bedarf (z.B. bei Frostwetter) oder nach telefonischer Vereinbarung.
+    </div></div>
+    <div class="col-right">
     <div class="panel" style="text-align:center;">
       <img src="logo.png" alt="Busching" class="logo" style="margin-bottom:20px;">
       <div class="company-name">Busching Autoteile GmbH</div>
