@@ -1,0 +1,78 @@
+name: Update Display Status
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Display mode (open/closed/warning)'
+        required: true
+        default: 'open'
+        type: choice
+        options:
+          - open
+          - closed
+          - warning
+      custom_message:
+        description: 'Custom message to display (optional)'
+        required: false
+        default: ''
+      custom_subtitle:
+        description: 'Custom subtitle (optional)'
+        required: false
+        default: ''
+      auto_schedule_enabled:
+        description: 'Enable auto schedule'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update status.json
+        run: |
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S+00:00")
+          cat > status.json << 'HEREDOC'
+          {
+            "mode": "${{ github.event.inputs.mode }}",
+            "customMessage": "${{ github.event.inputs.custom_message }}",
+            "customSubtitle": "${{ github.event.inputs.custom_subtitle }}",
+            "lastUpdated": "TIMESTAMP_PLACEHOLDER",
+            "source": "manual",
+            "autoScheduleEnabled": ${{ github.event.inputs.auto_schedule_enabled }}
+          }
+          HEREDOC
+          sed -i "s|TIMESTAMP_PLACEHOLDER|$TIMESTAMP|g" status.json
+
+          python3 -c "
+          import json
+          with open('status.json') as f:
+              d = json.load(f)
+          with open('status.json', 'w') as f:
+              json.dump(d, f, indent=2)
+              f.write('\n')
+          "
+          echo "Updated status.json:"
+          cat status.json
+
+      - name: Commit and push
+        run: |
+          git config user.name "Display Bot"
+          git config user.email "display-bot@busching-autoteile.com"
+          git add status.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "Display: ${{ github.event.inputs.mode }} (manual via control panel)"
+            git push
+          fi

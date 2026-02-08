@@ -284,6 +284,52 @@ body {
 }
 .message-btn:hover { background: #ffed4a; }
 
+/* Token Section */
+.token-section {
+  background: #1a1a2e;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.token-status {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 10px;
+}
+.token-status.ok { color: #00ee77; }
+.token-status.missing { color: #ff3355; }
+.token-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: #0f0f1a;
+  color: #fff;
+  margin-bottom: 8px;
+  outline: none;
+  font-family: monospace;
+}
+.token-input:focus { border-color: #ffd700; }
+.token-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 8px;
+}
+.token-btn:hover { background: #444; }
+.token-help {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
 /* Status Log */
 .status-log {
   background: #1a1a2e;
@@ -363,18 +409,18 @@ body {
 <div class="control-panel" id="controlPanel">
   <div class="panel-header">
     <h1>Busching Display Steuerung</h1>
-    <div class="subtitle">Fernsteuerung via GitHub Pages</div>
+    <div class="subtitle">Samsung Display Fernsteuerung</div>
   </div>
 
   <!-- Current Status -->
   <div class="current-status" id="currentStatus">
-    <div class="current-status-label">Aktueller Status</div>
+    <div class="current-status-label">Aktueller Status auf dem Display</div>
     <div class="current-status-value" id="statusValue">---</div>
     <div class="current-status-time" id="statusTime"></div>
   </div>
 
   <!-- Display Preview -->
-  <a href="./" target="_blank" class="preview-link" id="previewLink">Display-Vorschau oeffnen</a>
+  <a href="./" target="_blank" class="preview-link">Display-Vorschau oeffnen (goben-e-fit.github.io)</a>
 
   <!-- Mode Buttons -->
   <div class="section-title">Modus waehlen</div>
@@ -395,7 +441,7 @@ body {
       </label>
     </div>
     <div class="schedule-info">
-      Wenn aktiviert, wechselt das Display automatisch zwischen "Geoeffnet" und "Geschlossen" basierend auf den Oeffnungszeiten. Manuelle Aenderungen ueberschreiben die Automatik bis zum naechsten Zeitwechsel.
+      Wenn aktiviert, wechselt das Display automatisch zwischen "Geoeffnet" und "Geschlossen" gemaess den Oeffnungszeiten (via GitHub Actions alle Stunde). Manuelle Aenderungen ueberschreiben die Automatik bis zum naechsten Zeitwechsel.
     </div>
     <div class="schedule-times">
       <strong>Montag:</strong> 10:00 - 13:00, 14:00 - 18:00<br>
@@ -412,6 +458,18 @@ body {
     <button class="message-btn" onclick="sendCustomMessage()">Nachricht senden</button>
   </div>
 
+  <!-- GitHub Token -->
+  <div class="token-section">
+    <div class="section-title" style="margin-top:0">GitHub Verbindung</div>
+    <div class="token-status" id="tokenStatus">Pruefe...</div>
+    <input type="password" class="token-input" id="tokenInput" placeholder="GitHub Token eingeben (ghp_... oder gho_...)">
+    <button class="token-btn" onclick="saveToken()">Token speichern</button>
+    <button class="token-btn" onclick="testToken()">Testen</button>
+    <div class="token-help">
+      Token wird lokal im Browser gespeichert. Benoetigt: Contents (Read &amp; Write) Berechtigung fuer GOben-e-fit/busching-display.
+    </div>
+  </div>
+
   <!-- Status Log -->
   <div class="section-title">Protokoll</div>
   <div class="status-log" id="statusLog">
@@ -425,11 +483,10 @@ var REPO_OWNER = 'GOben-e-fit';
 var REPO_NAME = 'busching-display';
 var FILE_PATH = 'status.json';
 var BRANCH = 'main';
-// Passwort-Hash (einfache Obfuskation - kein echtes Security, reicht fuer internen Gebrauch)
-var PASS_HASH = '5069313030254c61'; // .Di100%La. in hex
+var PASS_HASH = '5069313030254c61'; // .Di100%La.
 
-// GitHub Token wird im localStorage gespeichert
 var githubToken = '';
+var currentSha = '';
 
 // ===== LOGIN =====
 function doLogin() {
@@ -448,62 +505,100 @@ function doLogin() {
   }
 }
 
-// Enter-Taste zum Login
 document.getElementById('passwordInput').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') doLogin();
 });
 
-// Session Check
 if (sessionStorage.getItem('busching_auth') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('controlPanel').style.display = 'block';
   setTimeout(initControlPanel, 100);
 }
 
-// ===== GITHUB TOKEN MANAGEMENT =====
+// ===== TOKEN MANAGEMENT =====
 function getToken() {
   return localStorage.getItem('busching_github_token') || '';
 }
 
-function promptForToken() {
-  var token = prompt(
-    'GitHub Personal Access Token benoetigt.\n\n' +
-    'Erstellen Sie einen Token unter:\n' +
-    'github.com > Settings > Developer settings > Personal access tokens > Fine-grained tokens\n\n' +
-    'Berechtigungen: Contents (Read and Write) fuer GOben-e-fit/busching-display\n\n' +
-    'Token eingeben:'
-  );
-  if (token && token.trim()) {
-    localStorage.setItem('busching_github_token', token.trim());
-    githubToken = token.trim();
-    addLog('GitHub Token gespeichert.', 'success');
-    return true;
+function saveToken() {
+  var token = document.getElementById('tokenInput').value.trim();
+  if (token) {
+    localStorage.setItem('busching_github_token', token);
+    githubToken = token;
+    document.getElementById('tokenInput').value = '';
+    addLog('Token gespeichert.', 'success');
+    testToken();
   }
-  return false;
 }
 
-// ===== CONTROL PANEL INIT =====
+function testToken() {
+  if (!githubToken) {
+    githubToken = getToken();
+  }
+  if (!githubToken) {
+    updateTokenStatus(false, 'Kein Token gespeichert');
+    return;
+  }
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME, true);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        var data = JSON.parse(xhr.responseText);
+        if (data.permissions && data.permissions.push) {
+          updateTokenStatus(true, 'Verbunden mit ' + REPO_OWNER + '/' + REPO_NAME);
+          addLog('GitHub Verbindung OK - Schreibrechte vorhanden.', 'success');
+        } else {
+          updateTokenStatus(false, 'Token hat keine Schreibrechte');
+          addLog('Token hat keine Schreibrechte fuer das Repository.', 'error');
+        }
+      } else {
+        updateTokenStatus(false, 'Token ungueltig (HTTP ' + xhr.status + ')');
+        addLog('Token ungueltig oder abgelaufen.', 'error');
+      }
+    }
+  };
+  xhr.send();
+}
+
+function updateTokenStatus(ok, msg) {
+  var el = document.getElementById('tokenStatus');
+  el.textContent = msg;
+  el.className = 'token-status ' + (ok ? 'ok' : 'missing');
+}
+
+// ===== INIT =====
 function initControlPanel() {
   githubToken = getToken();
-  if (!githubToken) {
-    addLog('Kein GitHub Token gefunden. Bitte Token eingeben.', 'info');
-    promptForToken();
+  if (githubToken) {
+    testToken();
+  } else {
+    updateTokenStatus(false, 'Kein Token gespeichert - bitte Token eingeben');
   }
   loadCurrentStatus();
 }
 
 // ===== STATUS LADEN =====
 function loadCurrentStatus() {
-  var url = 'status.json?t=' + new Date().getTime();
+  if (!githubToken) return;
+
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
+  xhr.open('GET', 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH, true);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
+      var fileData = JSON.parse(xhr.responseText);
+      currentSha = fileData.sha;
       try {
-        var data = JSON.parse(xhr.responseText);
+        var content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+        var data = JSON.parse(content);
         updateStatusDisplay(data);
       } catch(e) {
-        addLog('Fehler beim Laden des Status.', 'error');
+        addLog('Fehler beim Parsen der Status-Datei.', 'error');
       }
     }
   };
@@ -523,33 +618,29 @@ function updateStatusDisplay(data) {
 
   if (data.lastUpdated) {
     var d = new Date(data.lastUpdated);
-    timeEl.textContent = 'Letzte Aenderung: ' + d.toLocaleString('de-DE');
+    timeEl.textContent = 'Letzte Aenderung: ' + d.toLocaleString('de-DE') + ' (' + (data.source || 'unbekannt') + ')';
   }
 
-  // Auto-Toggle setzen
-  var toggle = document.getElementById('autoToggle');
-  if (data.autoScheduleEnabled !== undefined) {
-    toggle.checked = data.autoScheduleEnabled;
-  }
-
-  // Active Button markieren
-  var btns = document.querySelectorAll('.mode-btn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.remove('active');
-  }
+  document.getElementById('autoToggle').checked = data.autoScheduleEnabled !== false;
 }
 
 // ===== MODUS SETZEN =====
 function setMode(mode) {
   if (!githubToken) {
-    if (!promptForToken()) return;
+    addLog('Bitte zuerst GitHub Token eingeben!', 'error');
+    return;
   }
 
   showLoading(true);
   addLog('Setze Modus: ' + mode.toUpperCase() + '...', 'info');
 
+  var actualMode = mode;
+  if (mode === 'auto') {
+    actualMode = getAutoMode();
+  }
+
   var statusData = {
-    mode: mode === 'auto' ? getAutoMode() : mode,
+    mode: actualMode,
     customMessage: '',
     customSubtitle: '',
     lastUpdated: new Date().toISOString(),
@@ -588,7 +679,8 @@ function getAutoMode() {
 // ===== CUSTOM MESSAGE =====
 function sendCustomMessage() {
   if (!githubToken) {
-    if (!promptForToken()) return;
+    addLog('Bitte zuerst GitHub Token eingeben!', 'error');
+    return;
   }
 
   var msg = document.getElementById('customMessage').value;
@@ -617,7 +709,8 @@ function sendCustomMessage() {
 // ===== AUTO-SCHEDULE TOGGLE =====
 function toggleAutoSchedule() {
   if (!githubToken) {
-    if (!promptForToken()) return;
+    addLog('Bitte zuerst GitHub Token eingeben!', 'error');
+    return;
   }
 
   var enabled = document.getElementById('autoToggle').checked;
@@ -638,9 +731,9 @@ function toggleAutoSchedule() {
   updateGitHubFile(statusData);
 }
 
-// ===== GITHUB API: DATEI AKTUALISIEREN =====
+// ===== GITHUB API =====
 function updateGitHubFile(statusData) {
-  // Erst SHA der aktuellen Datei holen
+  // Erst aktuelle SHA holen
   var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH;
 
   var xhr = new XMLHttpRequest();
@@ -651,17 +744,14 @@ function updateGitHubFile(statusData) {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         var fileData = JSON.parse(xhr.responseText);
-        var sha = fileData.sha;
-        commitFile(statusData, sha);
+        currentSha = fileData.sha;
+        commitFile(statusData, currentSha);
       } else if (xhr.status === 404) {
-        // Datei existiert noch nicht
         commitFile(statusData, null);
-      } else if (xhr.status === 401) {
+      } else if (xhr.status === 401 || xhr.status === 403) {
         showLoading(false);
-        addLog('Token ungueltig oder abgelaufen. Bitte neuen Token eingeben.', 'error');
-        localStorage.removeItem('busching_github_token');
-        githubToken = '';
-        promptForToken();
+        addLog('Token ungueltig oder keine Berechtigung. Bitte neuen Token eingeben.', 'error');
+        updateTokenStatus(false, 'Token ungueltig');
       } else {
         showLoading(false);
         addLog('GitHub API Fehler: ' + xhr.status, 'error');
@@ -673,10 +763,11 @@ function updateGitHubFile(statusData) {
 
 function commitFile(statusData, sha) {
   var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH;
-  var content = btoa(unescape(encodeURIComponent(JSON.stringify(statusData, null, 2) + '\n')));
+  var jsonStr = JSON.stringify(statusData, null, 2) + '\n';
+  var content = btoa(unescape(encodeURIComponent(jsonStr)));
 
   var body = {
-    message: 'Display update: ' + statusData.mode.toUpperCase() + ' (' + statusData.source + ')',
+    message: 'Display: ' + statusData.mode.toUpperCase() + ' (' + statusData.source + ')',
     content: content,
     branch: BRANCH
   };
@@ -691,19 +782,20 @@ function commitFile(statusData, sha) {
     if (xhr.readyState === 4) {
       showLoading(false);
       if (xhr.status === 200 || xhr.status === 201) {
-        addLog('Erfolgreich aktualisiert: ' + statusData.mode.toUpperCase(), 'success');
+        var resp = JSON.parse(xhr.responseText);
+        currentSha = resp.content.sha;
+        addLog('Erfolgreich: ' + statusData.mode.toUpperCase() + ' - Display aktualisiert sich in ca. 1-2 Min.', 'success');
         updateStatusDisplay(statusData);
-        // Felder leeren
         document.getElementById('customMessage').value = '';
         document.getElementById('customSubtitle').value = '';
       } else if (xhr.status === 409) {
-        addLog('Konflikt - bitte erneut versuchen.', 'error');
+        addLog('Konflikt - versuche erneut...', 'error');
+        setTimeout(function() { updateGitHubFile(statusData); }, 1000);
       } else if (xhr.status === 401 || xhr.status === 403) {
-        addLog('Token-Berechtigung fehlt. Bitte neuen Token mit Contents-Schreibrecht erstellen.', 'error');
-        localStorage.removeItem('busching_github_token');
-        githubToken = '';
+        addLog('Keine Schreibberechtigung. Token pruefen!', 'error');
+        updateTokenStatus(false, 'Keine Schreibberechtigung');
       } else {
-        addLog('Fehler beim Speichern: ' + xhr.status + ' ' + xhr.responseText, 'error');
+        addLog('Fehler: HTTP ' + xhr.status, 'error');
       }
     }
   };
@@ -723,7 +815,6 @@ function addLog(msg, type) {
   entry.className = 'log-entry log-' + (type || 'info');
   entry.textContent = '[' + time + '] ' + msg;
   log.insertBefore(entry, log.firstChild);
-  // Max 50 Eintraege
   while (log.children.length > 50) {
     log.removeChild(log.lastChild);
   }
