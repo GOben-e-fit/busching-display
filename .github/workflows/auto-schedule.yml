@@ -1,0 +1,150 @@
+name: Auto Display Schedule
+
+on:
+  # Zeitplan basierend auf Öffnungszeiten (UTC-Zeiten, Berlin ist UTC+1)
+  schedule:
+    # === MONTAG (day 1) ===
+    # 10:00 Berlin = 09:00 UTC - Öffnen
+    - cron: '0 9 * * 1'
+    # 13:00 Berlin = 12:00 UTC - Mittagspause
+    - cron: '0 12 * * 1'
+    # 14:00 Berlin = 13:00 UTC - Wieder öffnen
+    - cron: '0 13 * * 1'
+    # 18:00 Berlin = 17:00 UTC - Schließen
+    - cron: '0 17 * * 1'
+
+    # === DIENSTAG BIS FREITAG (day 2-5) ===
+    # 09:00 Berlin = 08:00 UTC - Öffnen
+    - cron: '0 8 * * 2-5'
+    # 13:00 Berlin = 12:00 UTC - Mittagspause
+    - cron: '0 12 * * 2-5'
+    # 14:00 Berlin = 13:00 UTC - Wieder öffnen
+    - cron: '0 13 * * 2-5'
+    # 18:00 Berlin = 17:00 UTC - Schließen
+    - cron: '0 17 * * 2-5'
+
+  # Manueller Trigger
+  workflow_dispatch:
+    inputs:
+      force_mode:
+        description: 'Force mode (open/closed/auto)'
+        required: false
+        default: 'auto'
+
+permissions:
+  contents: write
+
+jobs:
+  update-display:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine display mode
+        id: mode
+        run: |
+          # Aktuelle Berliner Zeit
+          export TZ='Europe/Berlin'
+          BERLIN_HOUR=$(date +%H)
+          BERLIN_MIN=$(date +%M)
+          BERLIN_DAY=$(date +%u)  # 1=Mo, 7=So
+          CURRENT_MINS=$((10#$BERLIN_HOUR * 60 + 10#$BERLIN_MIN))
+
+          echo "Berlin time: $(date)"
+          echo "Day: $BERLIN_DAY, Hour: $BERLIN_HOUR, Min: $BERLIN_MIN, TotalMins: $CURRENT_MINS"
+
+          # Force mode from manual trigger
+          FORCE_MODE="${{ github.event.inputs.force_mode }}"
+          if [ "$FORCE_MODE" != "" ] && [ "$FORCE_MODE" != "auto" ]; then
+            echo "mode=$FORCE_MODE" >> $GITHUB_OUTPUT
+            echo "source=manual-workflow" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Prüfe ob autoScheduleEnabled in status.json
+          if [ -f status.json ]; then
+            AUTO_ENABLED=$(cat status.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('autoScheduleEnabled', True))" 2>/dev/null || echo "True")
+            if [ "$AUTO_ENABLED" = "False" ]; then
+              echo "Auto-Schedule ist deaktiviert. Keine Änderung."
+              echo "skip=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          fi
+
+          # Öffnungszeiten prüfen
+          MODE="closed"
+
+          if [ "$BERLIN_DAY" = "1" ]; then
+            # Montag: 10:00-13:00, 14:00-18:00
+            if [ $CURRENT_MINS -ge 600 ] && [ $CURRENT_MINS -lt 780 ]; then
+              MODE="open"
+            elif [ $CURRENT_MINS -ge 840 ] && [ $CURRENT_MINS -lt 1080 ]; then
+              MODE="open"
+            fi
+          elif [ "$BERLIN_DAY" -ge 2 ] && [ "$BERLIN_DAY" -le 5 ]; then
+            # Di-Fr: 09:00-13:00, 14:00-18:00
+            if [ $CURRENT_MINS -ge 540 ] && [ $CURRENT_MINS -lt 780 ]; then
+              MODE="open"
+            elif [ $CURRENT_MINS -ge 840 ] && [ $CURRENT_MINS -lt 1080 ]; then
+              MODE="open"
+            fi
+          fi
+          # Sa+So: bleibt closed
+
+          echo "mode=$MODE" >> $GITHUB_OUTPUT
+          echo "source=auto-schedule" >> $GITHUB_OUTPUT
+          echo "Determined mode: $MODE"
+
+      - name: Update status.json
+        if: steps.mode.outputs.skip != 'true'
+        run: |
+          MODE="${{ steps.mode.outputs.mode }}"
+          SOURCE="${{ steps.mode.outputs.source }}"
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S+00:00")
+
+          # Bestehende autoScheduleEnabled beibehalten
+          AUTO_ENABLED="true"
+          if [ -f status.json ]; then
+            AUTO_ENABLED=$(cat status.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(str(d.get('autoScheduleEnabled', True)).lower())" 2>/dev/null || echo "true")
+          fi
+
+          cat > status.json << EOF
+          {
+            "mode": "$MODE",
+            "customMessage": "",
+            "customSubtitle": "",
+            "lastUpdated": "$TIMESTAMP",
+            "source": "$SOURCE",
+            "autoScheduleEnabled": $AUTO_ENABLED
+          }
+          EOF
+
+          # JSON formatieren (Einrückung entfernen)
+          python3 -c "
+          import json
+          with open('status.json') as f:
+              d = json.load(f)
+          with open('status.json', 'w') as f:
+              json.dump(d, f, indent=2)
+              f.write('\n')
+          "
+
+          echo "Updated status.json:"
+          cat status.json
+
+      - name: Commit and push
+        if: steps.mode.outputs.skip != 'true'
+        run: |
+          git config user.name "Display Bot"
+          git config user.email "display-bot@busching-autoteile.com"
+          git add status.json
+          # Nur committen wenn sich etwas geändert hat
+          if git diff --cached --quiet; then
+            echo "Keine Änderungen - kein Commit nötig."
+          else
+            MODE="${{ steps.mode.outputs.mode }}"
+            git commit -m "Auto-Schedule: $MODE ($(TZ='Europe/Berlin' date '+%d.%m.%Y %H:%M'))"
+            git push
+            echo "Status erfolgreich aktualisiert!"
+          fi
