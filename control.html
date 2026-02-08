@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Busching Display Steuerung</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Busching Display">
+<meta name="theme-color" content="#1a1a2e">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #0f0f1a;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* ===== LOGIN ===== */
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+.login-box {
+  background: #1a1a2e;
+  border: 2px solid #333;
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.login-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 8px;
+}
+.login-subtitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 30px;
+}
+.login-input {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 18px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background: #0f0f1a;
+  color: #fff;
+  margin-bottom: 16px;
+  outline: none;
+}
+.login-input:focus { border-color: #ffd700; }
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  background: #ffd700;
+  color: #000;
+  cursor: pointer;
+}
+.login-btn:hover { background: #ffed4a; }
+.login-error {
+  color: #ff3355;
+  margin-top: 12px;
+  font-size: 14px;
+  display: none;
+}
+
+/* ===== CONTROL PANEL ===== */
+.control-panel {
+  display: none;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.panel-header {
+  text-align: center;
+  padding: 20px 0;
+  border-bottom: 2px solid #333;
+  margin-bottom: 20px;
+}
+.panel-header h1 {
+  font-size: 22px;
+  color: #ffd700;
+  margin-bottom: 4px;
+}
+.panel-header .subtitle {
+  font-size: 13px;
+  color: #888;
+}
+
+/* Status Indicator */
+.current-status {
+  text-align: center;
+  padding: 20px;
+  background: #1a1a2e;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 2px solid #333;
+}
+.current-status-label {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 8px;
+}
+.current-status-value {
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 4px;
+}
+.current-status-time {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* Buttons */
+.section-title {
+  font-size: 16px;
+  color: #ffd700;
+  font-weight: bold;
+  margin: 20px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.mode-btn {
+  padding: 20px 16px;
+  font-size: 18px;
+  font-weight: bold;
+  border: 3px solid;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.mode-btn:active { transform: scale(0.96); }
+.mode-btn.btn-open {
+  color: #00ee77;
+  border-color: #00ee77;
+}
+.mode-btn.btn-open:hover, .mode-btn.btn-open.active {
+  background: rgba(0, 238, 119, 0.15);
+}
+.mode-btn.btn-closed {
+  color: #ff3355;
+  border-color: #ff3355;
+}
+.mode-btn.btn-closed:hover, .mode-btn.btn-closed.active {
+  background: rgba(255, 51, 85, 0.15);
+}
+.mode-btn.btn-warning {
+  color: #ffbb00;
+  border-color: #ffbb00;
+}
+.mode-btn.btn-warning:hover, .mode-btn.btn-warning.active {
+  background: rgba(255, 187, 0, 0.15);
+}
+.mode-btn.btn-auto {
+  color: #4488ff;
+  border-color: #4488ff;
+}
+.mode-btn.btn-auto:hover, .mode-btn.btn-auto.active {
+  background: rgba(68, 136, 255, 0.15);
+}
+
+/* Auto-Schedule Toggle */
+.schedule-section {
+  background: #1a1a2e;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.schedule-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4488ff;
+}
+.toggle-switch {
+  position: relative;
+  width: 56px;
+  height: 30px;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #333;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+.toggle-slider:before {
+  content: '';
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.toggle-switch input:checked + .toggle-slider {
+  background: #4488ff;
+}
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+.schedule-info {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.5;
+}
+.schedule-times {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #aaa;
+  line-height: 1.8;
+}
+.schedule-times strong {
+  color: #ffd700;
+}
+
+/* Custom Message */
+.message-section {
+  background: #1a1a2e;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.message-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #333;
+  border-radius: 8px;
+  background: #0f0f1a;
+  color: #fff;
+  margin-bottom: 10px;
+  outline: none;
+}
+.message-input:focus { border-color: #ffd700; }
+.message-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background: #ffd700;
+  color: #000;
+  cursor: pointer;
+}
+.message-btn:hover { background: #ffed4a; }
+
+/* Status Log */
+.status-log {
+  background: #1a1a2e;
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: #888;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.log-entry {
+  padding: 4px 0;
+  border-bottom: 1px solid #222;
+}
+.log-entry:last-child { border-bottom: none; }
+.log-success { color: #00ee77; }
+.log-error { color: #ff3355; }
+.log-info { color: #4488ff; }
+
+/* Loading Overlay */
+.loading-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #333;
+  border-top: 4px solid #ffd700;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Display Preview Link */
+.preview-link {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #1a1a2e;
+  border: 2px solid #333;
+  border-radius: 12px;
+  color: #4488ff;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.preview-link:hover { border-color: #4488ff; }
+</style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-title">Busching Display</div>
+    <div class="login-subtitle">Steuerung &amp; Kontrolle</div>
+    <input type="password" class="login-input" id="passwordInput" placeholder="Passwort eingeben" autocomplete="off">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Anmelden</button>
+    <div class="login-error" id="loginError">Falsches Passwort</div>
+  </div>
+</div>
+
+<!-- Control Panel -->
+<div class="control-panel" id="controlPanel">
+  <div class="panel-header">
+    <h1>Busching Display Steuerung</h1>
+    <div class="subtitle">Fernsteuerung via GitHub Pages</div>
+  </div>
+
+  <!-- Current Status -->
+  <div class="current-status" id="currentStatus">
+    <div class="current-status-label">Aktueller Status</div>
+    <div class="current-status-value" id="statusValue">---</div>
+    <div class="current-status-time" id="statusTime"></div>
+  </div>
+
+  <!-- Display Preview -->
+  <a href="./" target="_blank" class="preview-link" id="previewLink">Display-Vorschau oeffnen</a>
+
+  <!-- Mode Buttons -->
+  <div class="section-title">Modus waehlen</div>
+  <div class="btn-grid">
+    <button class="mode-btn btn-open" onclick="setMode('open')">Geoeffnet</button>
+    <button class="mode-btn btn-closed" onclick="setMode('closed')">Geschlossen</button>
+    <button class="mode-btn btn-warning" onclick="setMode('warning')">Hinweis</button>
+    <button class="mode-btn btn-auto" onclick="setMode('auto')">Automatik</button>
+  </div>
+
+  <!-- Auto-Schedule -->
+  <div class="schedule-section">
+    <div class="schedule-header">
+      <div class="schedule-title">Automatische Zeitsteuerung</div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="autoToggle" onchange="toggleAutoSchedule()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="schedule-info">
+      Wenn aktiviert, wechselt das Display automatisch zwischen "Geoeffnet" und "Geschlossen" basierend auf den Oeffnungszeiten. Manuelle Aenderungen ueberschreiben die Automatik bis zum naechsten Zeitwechsel.
+    </div>
+    <div class="schedule-times">
+      <strong>Montag:</strong> 10:00 - 13:00, 14:00 - 18:00<br>
+      <strong>Di - Fr:</strong> 09:00 - 13:00, 14:00 - 18:00<br>
+      <strong>Sa + So:</strong> Geschlossen
+    </div>
+  </div>
+
+  <!-- Custom Message -->
+  <div class="message-section">
+    <div class="section-title" style="margin-top:0">Individuelle Nachricht</div>
+    <input type="text" class="message-input" id="customMessage" placeholder="z.B. Wegen Urlaub geschlossen">
+    <input type="text" class="message-input" id="customSubtitle" placeholder="Untertitel (optional)">
+    <button class="message-btn" onclick="sendCustomMessage()">Nachricht senden</button>
+  </div>
+
+  <!-- Status Log -->
+  <div class="section-title">Protokoll</div>
+  <div class="status-log" id="statusLog">
+    <div class="log-entry log-info">System bereit.</div>
+  </div>
+</div>
+
+<script>
+// ===== KONFIGURATION =====
+var REPO_OWNER = 'GOben-e-fit';
+var REPO_NAME = 'busching-display';
+var FILE_PATH = 'status.json';
+var BRANCH = 'main';
+// Passwort-Hash (einfache Obfuskation - kein echtes Security, reicht fuer internen Gebrauch)
+var PASS_HASH = '5069313030254c61'; // .Di100%La. in hex
+
+// GitHub Token wird im localStorage gespeichert
+var githubToken = '';
+
+// ===== LOGIN =====
+function doLogin() {
+  var pw = document.getElementById('passwordInput').value;
+  var hex = '';
+  for (var i = 0; i < pw.length; i++) {
+    hex += pw.charCodeAt(i).toString(16);
+  }
+  if (hex === PASS_HASH) {
+    sessionStorage.setItem('busching_auth', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('controlPanel').style.display = 'block';
+    initControlPanel();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+// Enter-Taste zum Login
+document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+// Session Check
+if (sessionStorage.getItem('busching_auth') === '1') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('controlPanel').style.display = 'block';
+  setTimeout(initControlPanel, 100);
+}
+
+// ===== GITHUB TOKEN MANAGEMENT =====
+function getToken() {
+  return localStorage.getItem('busching_github_token') || '';
+}
+
+function promptForToken() {
+  var token = prompt(
+    'GitHub Personal Access Token benoetigt.\n\n' +
+    'Erstellen Sie einen Token unter:\n' +
+    'github.com > Settings > Developer settings > Personal access tokens > Fine-grained tokens\n\n' +
+    'Berechtigungen: Contents (Read and Write) fuer GOben-e-fit/busching-display\n\n' +
+    'Token eingeben:'
+  );
+  if (token && token.trim()) {
+    localStorage.setItem('busching_github_token', token.trim());
+    githubToken = token.trim();
+    addLog('GitHub Token gespeichert.', 'success');
+    return true;
+  }
+  return false;
+}
+
+// ===== CONTROL PANEL INIT =====
+function initControlPanel() {
+  githubToken = getToken();
+  if (!githubToken) {
+    addLog('Kein GitHub Token gefunden. Bitte Token eingeben.', 'info');
+    promptForToken();
+  }
+  loadCurrentStatus();
+}
+
+// ===== STATUS LADEN =====
+function loadCurrentStatus() {
+  var url = 'status.json?t=' + new Date().getTime();
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      try {
+        var data = JSON.parse(xhr.responseText);
+        updateStatusDisplay(data);
+      } catch(e) {
+        addLog('Fehler beim Laden des Status.', 'error');
+      }
+    }
+  };
+  xhr.send();
+}
+
+function updateStatusDisplay(data) {
+  var el = document.getElementById('statusValue');
+  var timeEl = document.getElementById('statusTime');
+  var mode = data.mode || 'open';
+
+  var texts = { open: 'GEOEFFNET', closed: 'GESCHLOSSEN', warning: 'HINWEIS' };
+  var colors = { open: '#00ee77', closed: '#ff3355', warning: '#ffbb00' };
+
+  el.textContent = texts[mode] || mode.toUpperCase();
+  el.style.color = colors[mode] || '#fff';
+
+  if (data.lastUpdated) {
+    var d = new Date(data.lastUpdated);
+    timeEl.textContent = 'Letzte Aenderung: ' + d.toLocaleString('de-DE');
+  }
+
+  // Auto-Toggle setzen
+  var toggle = document.getElementById('autoToggle');
+  if (data.autoScheduleEnabled !== undefined) {
+    toggle.checked = data.autoScheduleEnabled;
+  }
+
+  // Active Button markieren
+  var btns = document.querySelectorAll('.mode-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('active');
+  }
+}
+
+// ===== MODUS SETZEN =====
+function setMode(mode) {
+  if (!githubToken) {
+    if (!promptForToken()) return;
+  }
+
+  showLoading(true);
+  addLog('Setze Modus: ' + mode.toUpperCase() + '...', 'info');
+
+  var statusData = {
+    mode: mode === 'auto' ? getAutoMode() : mode,
+    customMessage: '',
+    customSubtitle: '',
+    lastUpdated: new Date().toISOString(),
+    source: mode === 'auto' ? 'auto' : 'manual',
+    autoScheduleEnabled: mode === 'auto' ? true : document.getElementById('autoToggle').checked
+  };
+
+  updateGitHubFile(statusData);
+}
+
+function getAutoMode() {
+  var now = new Date();
+  var berlinStr = now.toLocaleString('en-US', {timeZone: 'Europe/Berlin'});
+  var berlin = new Date(berlinStr);
+  var day = berlin.getDay();
+  var h = berlin.getHours();
+  var m = berlin.getMinutes();
+  var mins = h * 60 + m;
+
+  var hours = {
+    1: [{o: 600, c: 780}, {o: 840, c: 1080}],
+    2: [{o: 540, c: 780}, {o: 840, c: 1080}],
+    3: [{o: 540, c: 780}, {o: 840, c: 1080}],
+    4: [{o: 540, c: 780}, {o: 840, c: 1080}],
+    5: [{o: 540, c: 780}, {o: 840, c: 1080}],
+    6: [], 0: []
+  };
+
+  var slots = hours[day] || [];
+  for (var i = 0; i < slots.length; i++) {
+    if (mins >= slots[i].o && mins < slots[i].c) return 'open';
+  }
+  return 'closed';
+}
+
+// ===== CUSTOM MESSAGE =====
+function sendCustomMessage() {
+  if (!githubToken) {
+    if (!promptForToken()) return;
+  }
+
+  var msg = document.getElementById('customMessage').value;
+  var sub = document.getElementById('customSubtitle').value;
+
+  if (!msg) {
+    addLog('Bitte Nachricht eingeben.', 'error');
+    return;
+  }
+
+  showLoading(true);
+  addLog('Sende Nachricht: ' + msg, 'info');
+
+  var statusData = {
+    mode: 'warning',
+    customMessage: msg,
+    customSubtitle: sub,
+    lastUpdated: new Date().toISOString(),
+    source: 'manual',
+    autoScheduleEnabled: document.getElementById('autoToggle').checked
+  };
+
+  updateGitHubFile(statusData);
+}
+
+// ===== AUTO-SCHEDULE TOGGLE =====
+function toggleAutoSchedule() {
+  if (!githubToken) {
+    if (!promptForToken()) return;
+  }
+
+  var enabled = document.getElementById('autoToggle').checked;
+  showLoading(true);
+  addLog('Zeitsteuerung ' + (enabled ? 'aktiviert' : 'deaktiviert'), 'info');
+
+  var mode = enabled ? getAutoMode() : 'open';
+
+  var statusData = {
+    mode: mode,
+    customMessage: '',
+    customSubtitle: '',
+    lastUpdated: new Date().toISOString(),
+    source: enabled ? 'auto' : 'manual',
+    autoScheduleEnabled: enabled
+  };
+
+  updateGitHubFile(statusData);
+}
+
+// ===== GITHUB API: DATEI AKTUALISIEREN =====
+function updateGitHubFile(statusData) {
+  // Erst SHA der aktuellen Datei holen
+  var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', apiUrl, true);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        var fileData = JSON.parse(xhr.responseText);
+        var sha = fileData.sha;
+        commitFile(statusData, sha);
+      } else if (xhr.status === 404) {
+        // Datei existiert noch nicht
+        commitFile(statusData, null);
+      } else if (xhr.status === 401) {
+        showLoading(false);
+        addLog('Token ungueltig oder abgelaufen. Bitte neuen Token eingeben.', 'error');
+        localStorage.removeItem('busching_github_token');
+        githubToken = '';
+        promptForToken();
+      } else {
+        showLoading(false);
+        addLog('GitHub API Fehler: ' + xhr.status, 'error');
+      }
+    }
+  };
+  xhr.send();
+}
+
+function commitFile(statusData, sha) {
+  var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH;
+  var content = btoa(unescape(encodeURIComponent(JSON.stringify(statusData, null, 2) + '\n')));
+
+  var body = {
+    message: 'Display update: ' + statusData.mode.toUpperCase() + ' (' + statusData.source + ')',
+    content: content,
+    branch: BRANCH
+  };
+  if (sha) body.sha = sha;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('PUT', apiUrl, true);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      showLoading(false);
+      if (xhr.status === 200 || xhr.status === 201) {
+        addLog('Erfolgreich aktualisiert: ' + statusData.mode.toUpperCase(), 'success');
+        updateStatusDisplay(statusData);
+        // Felder leeren
+        document.getElementById('customMessage').value = '';
+        document.getElementById('customSubtitle').value = '';
+      } else if (xhr.status === 409) {
+        addLog('Konflikt - bitte erneut versuchen.', 'error');
+      } else if (xhr.status === 401 || xhr.status === 403) {
+        addLog('Token-Berechtigung fehlt. Bitte neuen Token mit Contents-Schreibrecht erstellen.', 'error');
+        localStorage.removeItem('busching_github_token');
+        githubToken = '';
+      } else {
+        addLog('Fehler beim Speichern: ' + xhr.status + ' ' + xhr.responseText, 'error');
+      }
+    }
+  };
+  xhr.send(JSON.stringify(body));
+}
+
+// ===== HILFSFUNKTIONEN =====
+function showLoading(show) {
+  document.getElementById('loading').style.display = show ? 'flex' : 'none';
+}
+
+function addLog(msg, type) {
+  var log = document.getElementById('statusLog');
+  var now = new Date();
+  var time = now.toLocaleTimeString('de-DE');
+  var entry = document.createElement('div');
+  entry.className = 'log-entry log-' + (type || 'info');
+  entry.textContent = '[' + time + '] ' + msg;
+  log.insertBefore(entry, log.firstChild);
+  // Max 50 Eintraege
+  while (log.children.length > 50) {
+    log.removeChild(log.lastChild);
+  }
+}
+</script>
+</body>
+</html>

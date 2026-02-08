@@ -2,7 +2,6 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="refresh" content="30">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=1920">
 <title>Busching Autoteile</title>
@@ -241,57 +240,184 @@ body {
 </style>
 </head>
 <body>
-<div class="main">
-  <div class="header">
-    <div class="status status-open">GEOEFFNET</div>
-    <img src="logo.png" alt="Busching" class="logo">
-  </div>
-  
-  <div class="content">
-    <div class="col-left">
-      
-    <div class="panel">
-      <div class="panel-title">Oeffnungszeiten</div>
-      <div class="hours-table">
-        <div class="hours-row">
-          <span class="day-label">Montag:</span>
-          <span class="time-val">10:00 - 13:00</span>
-        </div>
-        <div class="hours-row">
-          <span class="day-label"></span>
-          <span class="time-val">14:00 - 18:00 Uhr</span>
-        </div>
-        <div class="time-separator"></div>
-        <div class="hours-row">
-          <span class="day-label">Di - Fr:</span>
-          <span class="time-val">09:00 - 13:00</span>
-        </div>
-        <div class="hours-row">
-          <span class="day-label"></span>
-          <span class="time-val">14:00 - 18:00 Uhr</span>
-        </div>
-      </div>
-    </div>
-    </div>
-    <div class="col-right">
-      
-    <div class="panel">
-      <div class="company-name">Busching Autoteile GmbH</div>
-      <div class="contact-line">
-        Otto-Suhr-Allee 29, 10585 Berlin
-        <span class="contact-phone">Tel. 030 - 342 20 23</span>
-        <span class="contact-email">info@busching-autoteile.com</span>
-      </div>
-    </div>
-      <div class="notice">
-        Darueber hinaus oeffnen wir bei Bedarf (z.B. bei Frostwetter) oder nach telefonischer Vereinbarung.
-      </div>
-    </div>
-  </div>
-  <div class="footer">
-    <div class="footer-left">Busching Autoteile GmbH &bull; Otto-Suhr-Allee 29 &bull; 10585 Berlin</div>
-    <div class="footer-phone">Tel. 030 - 342 20 23</div>
-  </div>
+<div class="main" id="display-content">
+  <!-- Content wird dynamisch aus status.json geladen -->
 </div>
+
+<script>
+// ===== KONFIGURATION =====
+var CONFIG = {
+  // Status-Datei wird aus dem gleichen Verzeichnis geladen
+  statusUrl: 'status.json',
+  // Refresh-Intervall in Millisekunden (15 Sekunden)
+  refreshInterval: 15000,
+  // Öffnungszeiten (für lokale Zeitsteuerung als Fallback)
+  hours: {
+    1: [{open: '10:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Montag
+    2: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Dienstag
+    3: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Mittwoch
+    4: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Donnerstag
+    5: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Freitag
+    6: [],  // Samstag - geschlossen
+    0: []   // Sonntag - geschlossen
+  }
+};
+
+// ===== TEMPLATES =====
+function getStatusClass(mode) {
+  switch(mode) {
+    case 'open': return 'status-open';
+    case 'closed': return 'status-closed';
+    case 'warning': return 'status-warning';
+    default: return 'status-open';
+  }
+}
+
+function getStatusText(mode) {
+  switch(mode) {
+    case 'open': return 'GEOEFFNET';
+    case 'closed': return 'GESCHLOSSEN';
+    case 'warning': return 'HINWEIS';
+    default: return 'GEOEFFNET';
+  }
+}
+
+function renderDisplay(data) {
+  var mode = data.mode || 'open';
+  var customMessage = data.customMessage || '';
+  var customSubtitle = data.customSubtitle || '';
+
+  var html = '';
+  html += '<div class="header">';
+  html += '  <div class="status ' + getStatusClass(mode) + '">' + getStatusText(mode) + '</div>';
+  html += '  <img src="logo.png" alt="Busching" class="logo">';
+  html += '</div>';
+  html += '<div class="content">';
+  html += '  <div class="col-left">';
+  html += '    <div class="panel">';
+  html += '      <div class="panel-title">Oeffnungszeiten</div>';
+  html += '      <div class="hours-table">';
+  html += '        <div class="hours-row"><span class="day-label">Montag:</span><span class="time-val">10:00 - 13:00</span></div>';
+  html += '        <div class="hours-row"><span class="day-label"></span><span class="time-val">14:00 - 18:00 Uhr</span></div>';
+  html += '        <div class="time-separator"></div>';
+  html += '        <div class="hours-row"><span class="day-label">Di - Fr:</span><span class="time-val">09:00 - 13:00</span></div>';
+  html += '        <div class="hours-row"><span class="day-label"></span><span class="time-val">14:00 - 18:00 Uhr</span></div>';
+  html += '      </div>';
+  html += '    </div>';
+
+  // Custom Message anzeigen falls vorhanden
+  if (customMessage) {
+    html += '    <div class="panel">';
+    var msgColor = mode === 'closed' ? 'red' : (mode === 'warning' ? 'yellow' : 'green');
+    html += '      <div class="big-message ' + msgColor + '">' + customMessage + '</div>';
+    if (customSubtitle) {
+      html += '      <div class="subtitle-text">' + customSubtitle + '</div>';
+    }
+    html += '    </div>';
+  }
+
+  html += '  </div>';
+  html += '  <div class="col-right">';
+  html += '    <div class="panel">';
+  html += '      <div class="company-name">Busching Autoteile GmbH</div>';
+  html += '      <div class="contact-line">';
+  html += '        Otto-Suhr-Allee 29, 10585 Berlin';
+  html += '        <span class="contact-phone">Tel. 030 - 342 20 23</span>';
+  html += '        <span class="contact-email">info@busching-autoteile.com</span>';
+  html += '      </div>';
+  html += '    </div>';
+  html += '    <div class="notice">';
+  html += '      Darueber hinaus oeffnen wir bei Bedarf (z.B. bei Frostwetter) oder nach telefonischer Vereinbarung.';
+  html += '    </div>';
+  html += '  </div>';
+  html += '</div>';
+  html += '<div class="footer">';
+  html += '  <div class="footer-left">Busching Autoteile GmbH &bull; Otto-Suhr-Allee 29 &bull; 10585 Berlin</div>';
+  html += '  <div class="footer-phone">Tel. 030 - 342 20 23</div>';
+  html += '</div>';
+
+  document.getElementById('display-content').innerHTML = html;
+}
+
+// ===== AUTO-REFRESH MIT CACHE-BUSTING =====
+var lastStatus = null;
+
+function loadStatus() {
+  var url = CONFIG.statusUrl + '?t=' + new Date().getTime();
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.setRequestHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  xhr.setRequestHeader('Pragma', 'no-cache');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          lastStatus = data;
+          renderDisplay(data);
+        } catch(e) {
+          // JSON Parse-Fehler - Fallback auf lokale Zeitsteuerung
+          if (!lastStatus) {
+            renderDisplay(getAutoStatus());
+          }
+        }
+      } else {
+        // Datei nicht gefunden oder Fehler - Fallback auf lokale Zeitsteuerung
+        if (!lastStatus) {
+          renderDisplay(getAutoStatus());
+        }
+      }
+    }
+  };
+  xhr.send();
+}
+
+// ===== LOKALE ZEITSTEUERUNG (FALLBACK) =====
+function getAutoStatus() {
+  var now = new Date();
+  // Berliner Zeit berechnen (UTC+1 bzw UTC+2 bei Sommerzeit)
+  var berlinTime = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/Berlin'}));
+  var day = berlinTime.getDay();
+  var hours = berlinTime.getHours();
+  var minutes = berlinTime.getMinutes();
+  var currentMinutes = hours * 60 + minutes;
+
+  var todayHours = CONFIG.hours[day] || [];
+  var isOpen = false;
+
+  for (var i = 0; i < todayHours.length; i++) {
+    var slot = todayHours[i];
+    var openParts = slot.open.split(':');
+    var closeParts = slot.close.split(':');
+    var openMin = parseInt(openParts[0]) * 60 + parseInt(openParts[1]);
+    var closeMin = parseInt(closeParts[0]) * 60 + parseInt(closeParts[1]);
+    if (currentMinutes >= openMin && currentMinutes < closeMin) {
+      isOpen = true;
+      break;
+    }
+  }
+
+  return {
+    mode: isOpen ? 'open' : 'closed',
+    customMessage: '',
+    customSubtitle: '',
+    source: 'auto'
+  };
+}
+
+// ===== START =====
+// Sofort laden
+loadStatus();
+
+// Alle 15 Sekunden aktualisieren
+setInterval(loadStatus, CONFIG.refreshInterval);
+
+// Zusätzlich: Seite komplett neu laden alle 5 Minuten (gegen Memory-Leaks auf Samsung Tizen)
+setTimeout(function() {
+  setInterval(function() {
+    window.location.reload(true);
+  }, 300000);
+}, 5000);
+</script>
 </body>
 </html>
