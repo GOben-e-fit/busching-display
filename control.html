@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>Busching Display Steuerung</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Busching Display">
 <meta name="theme-color" content="#1a1a2e">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,366 +33,176 @@ body {
   max-width: 400px;
   text-align: center;
 }
-.login-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #ffd700;
-  margin-bottom: 8px;
-}
-.login-subtitle {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 30px;
-}
+.login-title { font-size: 24px; font-weight: bold; color: #ffd700; margin-bottom: 8px; }
+.login-subtitle { font-size: 14px; color: #888; margin-bottom: 30px; }
 .login-input {
-  width: 100%;
-  padding: 14px 18px;
-  font-size: 18px;
-  border: 2px solid #333;
-  border-radius: 10px;
-  background: #0f0f1a;
-  color: #fff;
-  margin-bottom: 16px;
-  outline: none;
+  width: 100%; padding: 14px 18px; font-size: 18px;
+  border: 2px solid #333; border-radius: 10px;
+  background: #0f0f1a; color: #fff; margin-bottom: 16px; outline: none;
 }
 .login-input:focus { border-color: #ffd700; }
 .login-btn {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  background: #ffd700;
-  color: #000;
-  cursor: pointer;
+  width: 100%; padding: 14px; font-size: 18px; font-weight: bold;
+  border: none; border-radius: 10px; background: #ffd700; color: #000; cursor: pointer;
 }
 .login-btn:hover { background: #ffed4a; }
-.login-error {
-  color: #ff3355;
-  margin-top: 12px;
-  font-size: 14px;
-  display: none;
-}
+.login-error { color: #ff3355; margin-top: 12px; font-size: 14px; display: none; }
 
 /* ===== CONTROL PANEL ===== */
-.control-panel {
-  display: none;
-  padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-.panel-header {
-  text-align: center;
-  padding: 20px 0;
-  border-bottom: 2px solid #333;
-  margin-bottom: 20px;
-}
-.panel-header h1 {
-  font-size: 22px;
-  color: #ffd700;
-  margin-bottom: 4px;
-}
-.panel-header .subtitle {
-  font-size: 13px;
-  color: #888;
-}
+.control-panel { display: none; padding: 20px; max-width: 600px; margin: 0 auto; }
+.panel-header { text-align: center; padding: 20px 0; border-bottom: 2px solid #333; margin-bottom: 20px; }
+.panel-header h1 { font-size: 22px; color: #ffd700; margin-bottom: 4px; }
+.panel-header .subtitle { font-size: 13px; color: #888; }
 
-/* Status Indicator */
+/* Current Status */
 .current-status {
-  text-align: center;
-  padding: 20px;
-  background: #1a1a2e;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  border: 2px solid #333;
+  text-align: center; padding: 20px; background: #1a1a2e;
+  border-radius: 12px; margin-bottom: 20px; border: 2px solid #333;
 }
-.current-status-label {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 8px;
+.current-status-label { font-size: 14px; color: #888; margin-bottom: 8px; }
+.current-status-value { font-size: 36px; font-weight: bold; letter-spacing: 4px; }
+.current-status-time { font-size: 12px; color: #666; margin-top: 8px; }
+
+/* ===== ZEITSTEUERUNG BUTTON - PROMINENT ===== */
+.schedule-btn-container { margin-bottom: 20px; }
+.schedule-btn {
+  width: 100%; padding: 22px; font-size: 20px; font-weight: bold;
+  border: 4px solid; border-radius: 14px; cursor: pointer;
+  text-align: center; transition: all 0.2s; text-transform: uppercase;
+  letter-spacing: 3px; position: relative;
 }
-.current-status-value {
-  font-size: 36px;
-  font-weight: bold;
-  letter-spacing: 4px;
+.schedule-btn:active { transform: scale(0.97); }
+.schedule-btn.active {
+  background: rgba(68, 136, 255, 0.2); color: #4488ff; border-color: #4488ff;
 }
-.current-status-time {
-  font-size: 12px;
-  color: #666;
-  margin-top: 8px;
+.schedule-btn.inactive {
+  background: rgba(255, 51, 85, 0.1); color: #ff6677; border-color: #ff3355;
+}
+.schedule-btn .status-dot {
+  display: inline-block; width: 14px; height: 14px; border-radius: 50%;
+  margin-right: 10px; vertical-align: middle;
+}
+.schedule-btn.active .status-dot { background: #4488ff; box-shadow: 0 0 10px #4488ff; }
+.schedule-btn.inactive .status-dot { background: #ff3355; box-shadow: 0 0 10px #ff3355; }
+.schedule-hint {
+  font-size: 12px; color: #666; text-align: center; margin-top: 8px; line-height: 1.4;
 }
 
-/* Buttons */
+/* Section Title */
 .section-title {
-  font-size: 16px;
-  color: #ffd700;
-  font-weight: bold;
-  margin: 20px 0 12px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  font-size: 16px; color: #ffd700; font-weight: bold;
+  margin: 20px 0 12px; text-transform: uppercase; letter-spacing: 2px;
 }
-.btn-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
+
+/* Mode Buttons */
+.btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
 .mode-btn {
-  padding: 20px 16px;
-  font-size: 18px;
-  font-weight: bold;
-  border: 3px solid;
-  border-radius: 12px;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  padding: 20px 16px; font-size: 18px; font-weight: bold;
+  border: 3px solid; border-radius: 12px; background: transparent;
+  cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 2px;
 }
 .mode-btn:active { transform: scale(0.96); }
-.mode-btn.btn-open {
-  color: #00ee77;
-  border-color: #00ee77;
-}
-.mode-btn.btn-open:hover, .mode-btn.btn-open.active {
-  background: rgba(0, 238, 119, 0.15);
-}
-.mode-btn.btn-closed {
-  color: #ff3355;
-  border-color: #ff3355;
-}
-.mode-btn.btn-closed:hover, .mode-btn.btn-closed.active {
-  background: rgba(255, 51, 85, 0.15);
-}
-.mode-btn.btn-warning {
-  color: #ffbb00;
-  border-color: #ffbb00;
-}
-.mode-btn.btn-warning:hover, .mode-btn.btn-warning.active {
-  background: rgba(255, 187, 0, 0.15);
-}
-.mode-btn.btn-auto {
-  color: #4488ff;
-  border-color: #4488ff;
-}
-.mode-btn.btn-auto:hover, .mode-btn.btn-auto.active {
-  background: rgba(68, 136, 255, 0.15);
+.mode-btn.btn-open { color: #00ee77; border-color: #00ee77; }
+.mode-btn.btn-open:hover, .mode-btn.btn-open.active { background: rgba(0, 238, 119, 0.15); }
+.mode-btn.btn-closed { color: #ff3355; border-color: #ff3355; }
+.mode-btn.btn-closed:hover, .mode-btn.btn-closed.active { background: rgba(255, 51, 85, 0.15); }
+.mode-btn.btn-lunch { color: #ffcc00; border-color: #ffcc00; }
+.mode-btn.btn-lunch:hover, .mode-btn.btn-lunch.active { background: rgba(255, 204, 0, 0.15); }
+.mode-btn.btn-warning { color: #ff8800; border-color: #ff8800; }
+.mode-btn.btn-warning:hover, .mode-btn.btn-warning.active { background: rgba(255, 136, 0, 0.15); }
+
+/* Manual override warning */
+.manual-warning {
+  display: none; background: rgba(255, 51, 85, 0.1); border: 2px solid #ff3355;
+  border-radius: 10px; padding: 12px 16px; margin-bottom: 16px;
+  font-size: 14px; color: #ff6677; text-align: center;
 }
 
-/* Auto-Schedule Toggle */
-.schedule-section {
-  background: #1a1a2e;
-  border: 2px solid #333;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+/* Schedule Info */
+.schedule-info-box {
+  background: #1a1a2e; border: 2px solid #333; border-radius: 12px;
+  padding: 20px; margin-bottom: 20px;
 }
-.schedule-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.schedule-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #4488ff;
-}
-.toggle-switch {
-  position: relative;
-  width: 56px;
-  height: 30px;
-}
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: #333;
-  border-radius: 30px;
-  transition: 0.3s;
-}
-.toggle-slider:before {
-  content: '';
-  position: absolute;
-  height: 24px;
-  width: 24px;
-  left: 3px;
-  bottom: 3px;
-  background: #fff;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-.toggle-switch input:checked + .toggle-slider {
-  background: #4488ff;
-}
-.toggle-switch input:checked + .toggle-slider:before {
-  transform: translateX(26px);
-}
-.schedule-info {
-  font-size: 13px;
-  color: #888;
-  line-height: 1.5;
-}
-.schedule-times {
-  margin-top: 12px;
-  font-size: 13px;
-  color: #aaa;
-  line-height: 1.8;
-}
-.schedule-times strong {
-  color: #ffd700;
-}
+.schedule-times { font-size: 14px; color: #aaa; line-height: 1.8; }
+.schedule-times strong { color: #ffd700; }
 
 /* Custom Message */
 .message-section {
-  background: #1a1a2e;
-  border: 2px solid #333;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  background: #1a1a2e; border: 2px solid #333; border-radius: 12px;
+  padding: 20px; margin-bottom: 20px;
 }
 .message-input {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 2px solid #333;
-  border-radius: 8px;
-  background: #0f0f1a;
-  color: #fff;
-  margin-bottom: 10px;
-  outline: none;
+  width: 100%; padding: 12px; font-size: 16px;
+  border: 2px solid #333; border-radius: 8px;
+  background: #0f0f1a; color: #fff; margin-bottom: 10px; outline: none;
 }
 .message-input:focus { border-color: #ffd700; }
 .message-btn {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  background: #ffd700;
-  color: #000;
-  cursor: pointer;
+  width: 100%; padding: 12px; font-size: 16px; font-weight: bold;
+  border: none; border-radius: 8px; background: #ffd700; color: #000; cursor: pointer;
 }
 .message-btn:hover { background: #ffed4a; }
 
 /* Token Section */
 .token-section {
-  background: #1a1a2e;
-  border: 2px solid #333;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  background: #1a1a2e; border: 2px solid #333; border-radius: 12px;
+  padding: 20px; margin-bottom: 20px;
 }
-.token-status {
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 10px;
-}
+.token-status { font-size: 13px; color: #888; margin-bottom: 10px; }
 .token-status.ok { color: #00ee77; }
 .token-status.missing { color: #ff3355; }
 .token-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 2px solid #333;
-  border-radius: 8px;
-  background: #0f0f1a;
-  color: #fff;
-  margin-bottom: 8px;
-  outline: none;
-  font-family: monospace;
+  width: 100%; padding: 10px; font-size: 14px;
+  border: 2px solid #333; border-radius: 8px;
+  background: #0f0f1a; color: #fff; margin-bottom: 8px; outline: none; font-family: monospace;
 }
 .token-input:focus { border-color: #ffd700; }
 .token-btn {
-  padding: 8px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 8px;
-  background: #333;
-  color: #fff;
-  cursor: pointer;
-  margin-right: 8px;
+  padding: 8px 16px; font-size: 14px; border: none; border-radius: 8px;
+  background: #333; color: #fff; cursor: pointer; margin-right: 8px;
 }
 .token-btn:hover { background: #444; }
-.token-help {
-  font-size: 12px;
-  color: #666;
-  margin-top: 8px;
-  line-height: 1.5;
-}
+.token-help { font-size: 12px; color: #666; margin-top: 8px; line-height: 1.5; }
 
 /* Status Log */
 .status-log {
-  background: #1a1a2e;
-  border: 2px solid #333;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-  font-size: 12px;
-  color: #888;
-  max-height: 200px;
-  overflow-y: auto;
+  background: #1a1a2e; border: 2px solid #333; border-radius: 12px;
+  padding: 16px; margin-bottom: 20px; font-size: 12px; color: #888;
+  max-height: 200px; overflow-y: auto;
 }
-.log-entry {
-  padding: 4px 0;
-  border-bottom: 1px solid #222;
-}
+.log-entry { padding: 4px 0; border-bottom: 1px solid #222; }
 .log-entry:last-child { border-bottom: none; }
 .log-success { color: #00ee77; }
 .log-error { color: #ff3355; }
 .log-info { color: #4488ff; }
 
-/* Loading Overlay */
+/* Loading */
 .loading-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 1000;
-  justify-content: center;
-  align-items: center;
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7); z-index: 1000;
+  justify-content: center; align-items: center;
 }
 .loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #333;
-  border-top: 4px solid #ffd700;
-  border-radius: 50%;
+  width: 50px; height: 50px; border: 4px solid #333;
+  border-top: 4px solid #ffd700; border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Display Preview Link */
+/* Preview Link */
 .preview-link {
-  display: block;
-  text-align: center;
-  padding: 12px;
-  background: #1a1a2e;
-  border: 2px solid #333;
-  border-radius: 12px;
-  color: #4488ff;
-  text-decoration: none;
-  font-size: 14px;
-  margin-bottom: 20px;
+  display: block; text-align: center; padding: 12px;
+  background: #1a1a2e; border: 2px solid #333; border-radius: 12px;
+  color: #4488ff; text-decoration: none; font-size: 14px; margin-bottom: 20px;
 }
 .preview-link:hover { border-color: #4488ff; }
 </style>
 </head>
 <body>
 
-<!-- Loading Overlay -->
-<div class="loading-overlay" id="loading">
-  <div class="loading-spinner"></div>
-</div>
+<div class="loading-overlay" id="loading"><div class="loading-spinner"></div></div>
 
-<!-- Login Screen -->
+<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <div class="login-title">Busching Display</div>
@@ -405,7 +213,7 @@ body {
   </div>
 </div>
 
-<!-- Control Panel -->
+<!-- CONTROL PANEL -->
 <div class="control-panel" id="controlPanel">
   <div class="panel-header">
     <h1>Busching Display Steuerung</h1>
@@ -419,34 +227,40 @@ body {
     <div class="current-status-time" id="statusTime"></div>
   </div>
 
-  <!-- Display Preview -->
-  <a href="./" target="_blank" class="preview-link">Display-Vorschau oeffnen (goben-e-fit.github.io)</a>
-
-  <!-- Mode Buttons -->
-  <div class="section-title">Modus waehlen</div>
-  <div class="btn-grid">
-    <button class="mode-btn btn-open" onclick="setMode('open')">Geoeffnet</button>
-    <button class="mode-btn btn-closed" onclick="setMode('closed')">Geschlossen</button>
-    <button class="mode-btn btn-warning" onclick="setMode('warning')">Hinweis</button>
-    <button class="mode-btn btn-auto" onclick="setMode('auto')">Automatik</button>
+  <!-- ZEITSTEUERUNG BUTTON -->
+  <div class="schedule-btn-container">
+    <button class="schedule-btn inactive" id="scheduleBtn" onclick="toggleAutoSchedule()">
+      <span class="status-dot"></span>
+      <span id="scheduleBtnText">Zeitsteuerung: AUS</span>
+    </button>
+    <div class="schedule-hint">Jeder manuelle Eingriff (Buttons unten) deaktiviert die Zeitsteuerung automatisch.</div>
   </div>
 
-  <!-- Auto-Schedule -->
-  <div class="schedule-section">
-    <div class="schedule-header">
-      <div class="schedule-title">Automatische Zeitsteuerung</div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="autoToggle" onchange="toggleAutoSchedule()">
-        <span class="toggle-slider"></span>
-      </label>
-    </div>
-    <div class="schedule-info">
-      Wenn aktiviert, wechselt das Display automatisch zwischen "Geoeffnet" und "Geschlossen" gemaess den Oeffnungszeiten (via GitHub Actions alle Stunde). Manuelle Aenderungen ueberschreiben die Automatik bis zum naechsten Zeitwechsel.
-    </div>
+  <!-- Manual Override Warning -->
+  <div class="manual-warning" id="manualWarning">
+    Zeitsteuerung wurde deaktiviert. Klicken Sie oben auf "Zeitsteuerung", um sie wieder zu aktivieren.
+  </div>
+
+  <!-- Display Preview -->
+  <a href="./" target="_blank" class="preview-link">Display-Vorschau (goben-e-fit.github.io)</a>
+
+  <!-- Mode Buttons -->
+  <div class="section-title">Manuell steuern</div>
+  <div class="btn-grid">
+    <button class="mode-btn btn-open" onclick="setMode('open')">Ge&ouml;ffnet</button>
+    <button class="mode-btn btn-closed" onclick="setMode('closed')">Geschlossen</button>
+    <button class="mode-btn btn-lunch" onclick="setMode('lunch')">Mittagspause</button>
+    <button class="mode-btn btn-warning" onclick="setMode('warning')">Hinweis</button>
+  </div>
+
+  <!-- Schedule Info -->
+  <div class="schedule-info-box">
+    <div class="section-title" style="margin-top:0">Automatische Zeiten</div>
     <div class="schedule-times">
-      <strong>Montag:</strong> 10:00 - 13:00, 14:00 - 18:00<br>
-      <strong>Di - Fr:</strong> 09:00 - 13:00, 14:00 - 18:00<br>
-      <strong>Sa + So:</strong> Geschlossen
+      <strong>Montag:</strong> 10:00 - 13:00 | Mittagspause | 14:00 - 18:00<br>
+      <strong>Di - Fr:</strong> 09:00 - 13:00 | Mittagspause | 14:00 - 18:00<br>
+      <strong>Sa + So:</strong> Geschlossen<br><br>
+      <strong>Ablauf:</strong> GE&Ouml;FFNET (gr&uuml;n) &rarr; MITTAGSPAUSE (gelb) &rarr; GE&Ouml;FFNET (gr&uuml;n) &rarr; GESCHLOSSEN (rot)
     </div>
   </div>
 
@@ -461,12 +275,12 @@ body {
   <!-- GitHub Token -->
   <div class="token-section">
     <div class="section-title" style="margin-top:0">GitHub Verbindung</div>
-    <div class="token-status" id="tokenStatus">Pruefe...</div>
+    <div class="token-status" id="tokenStatus">Pr&uuml;fe...</div>
     <input type="password" class="token-input" id="tokenInput" placeholder="GitHub Token eingeben (ghp_... oder gho_...)">
     <button class="token-btn" onclick="saveToken()">Token speichern</button>
     <button class="token-btn" onclick="testToken()">Testen</button>
     <div class="token-help">
-      Token wird lokal im Browser gespeichert. Benoetigt: Contents (Read &amp; Write) Berechtigung fuer GOben-e-fit/busching-display.
+      Token wird lokal im Browser gespeichert. Ben&ouml;tigt: Contents (Read &amp; Write) f&uuml;r GOben-e-fit/busching-display.
     </div>
   </div>
 
@@ -478,23 +292,21 @@ body {
 </div>
 
 <script>
-// ===== KONFIGURATION =====
 var REPO_OWNER = 'GOben-e-fit';
 var REPO_NAME = 'busching-display';
 var FILE_PATH = 'status.json';
 var BRANCH = 'main';
-var PASS_HASH = '5069313030254c61'; // .Di100%La.
+var PASS_HASH = '5069313030254c61';
 
 var githubToken = '';
 var currentSha = '';
+var autoScheduleEnabled = false;
 
 // ===== LOGIN =====
 function doLogin() {
   var pw = document.getElementById('passwordInput').value;
   var hex = '';
-  for (var i = 0; i < pw.length; i++) {
-    hex += pw.charCodeAt(i).toString(16);
-  }
+  for (var i = 0; i < pw.length; i++) hex += pw.charCodeAt(i).toString(16);
   if (hex === PASS_HASH) {
     sessionStorage.setItem('busching_auth', '1');
     document.getElementById('loginScreen').style.display = 'none';
@@ -504,22 +316,15 @@ function doLogin() {
     document.getElementById('loginError').style.display = 'block';
   }
 }
-
-document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') doLogin();
-});
-
+document.getElementById('passwordInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') doLogin(); });
 if (sessionStorage.getItem('busching_auth') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('controlPanel').style.display = 'block';
   setTimeout(initControlPanel, 100);
 }
 
-// ===== TOKEN MANAGEMENT =====
-function getToken() {
-  return localStorage.getItem('busching_github_token') || '';
-}
-
+// ===== TOKEN =====
+function getToken() { return localStorage.getItem('busching_github_token') || ''; }
 function saveToken() {
   var token = document.getElementById('tokenInput').value.trim();
   if (token) {
@@ -530,16 +335,9 @@ function saveToken() {
     testToken();
   }
 }
-
 function testToken() {
-  if (!githubToken) {
-    githubToken = getToken();
-  }
-  if (!githubToken) {
-    updateTokenStatus(false, 'Kein Token gespeichert');
-    return;
-  }
-
+  if (!githubToken) githubToken = getToken();
+  if (!githubToken) { updateTokenStatus(false, 'Kein Token gespeichert'); return; }
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME, true);
   xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
@@ -549,11 +347,11 @@ function testToken() {
       if (xhr.status === 200) {
         var data = JSON.parse(xhr.responseText);
         if (data.permissions && data.permissions.push) {
-          updateTokenStatus(true, 'Verbunden mit ' + REPO_OWNER + '/' + REPO_NAME);
-          addLog('GitHub Verbindung OK - Schreibrechte vorhanden.', 'success');
+          updateTokenStatus(true, 'Verbunden - Schreibrechte OK');
+          addLog('GitHub Verbindung OK.', 'success');
         } else {
-          updateTokenStatus(false, 'Token hat keine Schreibrechte');
-          addLog('Token hat keine Schreibrechte fuer das Repository.', 'error');
+          updateTokenStatus(false, 'Keine Schreibrechte');
+          addLog('Token hat keine Schreibrechte.', 'error');
         }
       } else {
         updateTokenStatus(false, 'Token ungueltig (HTTP ' + xhr.status + ')');
@@ -563,7 +361,6 @@ function testToken() {
   };
   xhr.send();
 }
-
 function updateTokenStatus(ok, msg) {
   var el = document.getElementById('tokenStatus');
   el.textContent = msg;
@@ -573,18 +370,14 @@ function updateTokenStatus(ok, msg) {
 // ===== INIT =====
 function initControlPanel() {
   githubToken = getToken();
-  if (githubToken) {
-    testToken();
-  } else {
-    updateTokenStatus(false, 'Kein Token gespeichert - bitte Token eingeben');
-  }
+  if (githubToken) { testToken(); }
+  else { updateTokenStatus(false, 'Kein Token - bitte eingeben'); }
   loadCurrentStatus();
 }
 
 // ===== STATUS LADEN =====
 function loadCurrentStatus() {
   if (!githubToken) return;
-
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH, true);
   xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
@@ -597,58 +390,118 @@ function loadCurrentStatus() {
         var content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
         var data = JSON.parse(content);
         updateStatusDisplay(data);
-      } catch(e) {
-        addLog('Fehler beim Parsen der Status-Datei.', 'error');
-      }
+      } catch(e) { addLog('Fehler beim Parsen der Status-Datei.', 'error'); }
     }
   };
   xhr.send();
 }
 
 function updateStatusDisplay(data) {
-  var el = document.getElementById('statusValue');
-  var timeEl = document.getElementById('statusTime');
   var mode = data.mode || 'open';
+  var texts = { open: 'GE\u00D6FFNET', closed: 'GESCHLOSSEN', lunch: 'MITTAGSPAUSE', warning: 'HINWEIS' };
+  var colors = { open: '#00ee77', closed: '#ff3355', lunch: '#ffcc00', warning: '#ff8800' };
 
-  var texts = { open: 'GEOEFFNET', closed: 'GESCHLOSSEN', warning: 'HINWEIS' };
-  var colors = { open: '#00ee77', closed: '#ff3355', warning: '#ffbb00' };
-
+  var el = document.getElementById('statusValue');
   el.textContent = texts[mode] || mode.toUpperCase();
   el.style.color = colors[mode] || '#fff';
 
+  var timeEl = document.getElementById('statusTime');
   if (data.lastUpdated) {
     var d = new Date(data.lastUpdated);
-    timeEl.textContent = 'Letzte Aenderung: ' + d.toLocaleString('de-DE') + ' (' + (data.source || 'unbekannt') + ')';
+    timeEl.textContent = 'Letzte Aenderung: ' + d.toLocaleString('de-DE') + ' (' + (data.source || '?') + ')';
   }
 
-  document.getElementById('autoToggle').checked = data.autoScheduleEnabled !== false;
+  // Zeitsteuerung Status
+  autoScheduleEnabled = data.autoScheduleEnabled === true;
+  updateScheduleButton();
+
+  // Manual warning
+  document.getElementById('manualWarning').style.display = (!autoScheduleEnabled && data.source === 'manual') ? 'block' : 'none';
 }
 
-// ===== MODUS SETZEN =====
+function updateScheduleButton() {
+  var btn = document.getElementById('scheduleBtn');
+  var txt = document.getElementById('scheduleBtnText');
+  if (autoScheduleEnabled) {
+    btn.className = 'schedule-btn active';
+    txt.textContent = 'Zeitsteuerung: AN';
+  } else {
+    btn.className = 'schedule-btn inactive';
+    txt.textContent = 'Zeitsteuerung: AUS';
+  }
+}
+
+// ===== MODUS SETZEN (MANUELL - DEAKTIVIERT ZEITSTEUERUNG!) =====
 function setMode(mode) {
-  if (!githubToken) {
-    addLog('Bitte zuerst GitHub Token eingeben!', 'error');
-    return;
-  }
-
+  if (!githubToken) { addLog('Bitte zuerst GitHub Token eingeben!', 'error'); return; }
   showLoading(true);
-  addLog('Setze Modus: ' + mode.toUpperCase() + '...', 'info');
 
-  var actualMode = mode;
-  if (mode === 'auto') {
-    actualMode = getAutoMode();
-  }
+  // JEDER manuelle Klick deaktiviert die Zeitsteuerung
+  autoScheduleEnabled = false;
+  updateScheduleButton();
+
+  addLog('Manuell: ' + mode.toUpperCase() + ' (Zeitsteuerung deaktiviert)', 'info');
 
   var statusData = {
-    mode: actualMode,
+    mode: mode,
     customMessage: '',
     customSubtitle: '',
     lastUpdated: new Date().toISOString(),
-    source: mode === 'auto' ? 'auto' : 'manual',
-    autoScheduleEnabled: mode === 'auto' ? true : document.getElementById('autoToggle').checked
+    source: 'manual',
+    autoScheduleEnabled: false
   };
-
   updateGitHubFile(statusData);
+}
+
+// ===== ZEITSTEUERUNG TOGGLE =====
+function toggleAutoSchedule() {
+  if (!githubToken) { addLog('Bitte zuerst GitHub Token eingeben!', 'error'); return; }
+  showLoading(true);
+
+  autoScheduleEnabled = !autoScheduleEnabled;
+  updateScheduleButton();
+
+  if (autoScheduleEnabled) {
+    // Zeitsteuerung aktivieren - sofort richtigen Modus setzen
+    var mode = getAutoMode();
+    addLog('Zeitsteuerung AKTIVIERT - Modus: ' + mode.toUpperCase(), 'success');
+    var statusData = {
+      mode: mode,
+      customMessage: '',
+      customSubtitle: '',
+      lastUpdated: new Date().toISOString(),
+      source: 'auto',
+      autoScheduleEnabled: true
+    };
+    updateGitHubFile(statusData);
+  } else {
+    addLog('Zeitsteuerung DEAKTIVIERT', 'info');
+    // Nur autoScheduleEnabled auf false setzen, Modus beibehalten
+    loadCurrentStatusThenUpdate(false);
+  }
+}
+
+function loadCurrentStatusThenUpdate(newAutoState) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH, true);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
+  xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var fileData = JSON.parse(xhr.responseText);
+      currentSha = fileData.sha;
+      var content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+      var data = JSON.parse(content);
+      data.autoScheduleEnabled = newAutoState;
+      data.lastUpdated = new Date().toISOString();
+      data.source = 'manual';
+      updateGitHubFile(data);
+    } else if (xhr.readyState === 4) {
+      showLoading(false);
+      addLog('Fehler beim Laden des Status.', 'error');
+    }
+  };
+  xhr.send();
 }
 
 function getAutoMode() {
@@ -656,86 +509,51 @@ function getAutoMode() {
   var berlinStr = now.toLocaleString('en-US', {timeZone: 'Europe/Berlin'});
   var berlin = new Date(berlinStr);
   var day = berlin.getDay();
-  var h = berlin.getHours();
-  var m = berlin.getMinutes();
-  var mins = h * 60 + m;
+  var mins = berlin.getHours() * 60 + berlin.getMinutes();
 
-  var hours = {
-    1: [{o: 600, c: 780}, {o: 840, c: 1080}],
-    2: [{o: 540, c: 780}, {o: 840, c: 1080}],
-    3: [{o: 540, c: 780}, {o: 840, c: 1080}],
-    4: [{o: 540, c: 780}, {o: 840, c: 1080}],
-    5: [{o: 540, c: 780}, {o: 840, c: 1080}],
-    6: [], 0: []
-  };
+  // Wochenende
+  if (day === 0 || day === 6) return 'closed';
 
-  var slots = hours[day] || [];
-  for (var i = 0; i < slots.length; i++) {
-    if (mins >= slots[i].o && mins < slots[i].c) return 'open';
-  }
+  // Montag: 10-13, 14-18
+  // Di-Fr: 9-13, 14-18
+  var morningOpen = (day === 1) ? 600 : 540; // 10:00 bzw 9:00
+  var morningClose = 780; // 13:00
+  var lunchEnd = 840; // 14:00
+  var eveningClose = 1080; // 18:00
+
+  if (mins >= morningOpen && mins < morningClose) return 'open';
+  if (mins >= morningClose && mins < lunchEnd) return 'lunch';
+  if (mins >= lunchEnd && mins < eveningClose) return 'open';
   return 'closed';
 }
 
-// ===== CUSTOM MESSAGE =====
+// ===== CUSTOM MESSAGE (DEAKTIVIERT AUCH ZEITSTEUERUNG) =====
 function sendCustomMessage() {
-  if (!githubToken) {
-    addLog('Bitte zuerst GitHub Token eingeben!', 'error');
-    return;
-  }
-
+  if (!githubToken) { addLog('Bitte zuerst GitHub Token eingeben!', 'error'); return; }
   var msg = document.getElementById('customMessage').value;
-  var sub = document.getElementById('customSubtitle').value;
-
-  if (!msg) {
-    addLog('Bitte Nachricht eingeben.', 'error');
-    return;
-  }
+  if (!msg) { addLog('Bitte Nachricht eingeben.', 'error'); return; }
 
   showLoading(true);
-  addLog('Sende Nachricht: ' + msg, 'info');
+  autoScheduleEnabled = false;
+  updateScheduleButton();
 
+  addLog('Nachricht gesendet (Zeitsteuerung deaktiviert): ' + msg, 'info');
+
+  var sub = document.getElementById('customSubtitle').value;
   var statusData = {
     mode: 'warning',
     customMessage: msg,
     customSubtitle: sub,
     lastUpdated: new Date().toISOString(),
     source: 'manual',
-    autoScheduleEnabled: document.getElementById('autoToggle').checked
+    autoScheduleEnabled: false
   };
-
-  updateGitHubFile(statusData);
-}
-
-// ===== AUTO-SCHEDULE TOGGLE =====
-function toggleAutoSchedule() {
-  if (!githubToken) {
-    addLog('Bitte zuerst GitHub Token eingeben!', 'error');
-    return;
-  }
-
-  var enabled = document.getElementById('autoToggle').checked;
-  showLoading(true);
-  addLog('Zeitsteuerung ' + (enabled ? 'aktiviert' : 'deaktiviert'), 'info');
-
-  var mode = enabled ? getAutoMode() : 'open';
-
-  var statusData = {
-    mode: mode,
-    customMessage: '',
-    customSubtitle: '',
-    lastUpdated: new Date().toISOString(),
-    source: enabled ? 'auto' : 'manual',
-    autoScheduleEnabled: enabled
-  };
-
   updateGitHubFile(statusData);
 }
 
 // ===== GITHUB API =====
 function updateGitHubFile(statusData) {
-  // Erst aktuelle SHA holen
   var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH + '?ref=' + BRANCH;
-
   var xhr = new XMLHttpRequest();
   xhr.open('GET', apiUrl, true);
   xhr.setRequestHeader('Authorization', 'Bearer ' + githubToken);
@@ -750,7 +568,7 @@ function updateGitHubFile(statusData) {
         commitFile(statusData, null);
       } else if (xhr.status === 401 || xhr.status === 403) {
         showLoading(false);
-        addLog('Token ungueltig oder keine Berechtigung. Bitte neuen Token eingeben.', 'error');
+        addLog('Token ungueltig oder keine Berechtigung.', 'error');
         updateTokenStatus(false, 'Token ungueltig');
       } else {
         showLoading(false);
@@ -765,12 +583,7 @@ function commitFile(statusData, sha) {
   var apiUrl = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + FILE_PATH;
   var jsonStr = JSON.stringify(statusData, null, 2) + '\n';
   var content = btoa(unescape(encodeURIComponent(jsonStr)));
-
-  var body = {
-    message: 'Display: ' + statusData.mode.toUpperCase() + ' (' + statusData.source + ')',
-    content: content,
-    branch: BRANCH
-  };
+  var body = { message: 'Display: ' + statusData.mode.toUpperCase() + ' (' + statusData.source + ')', content: content, branch: BRANCH };
   if (sha) body.sha = sha;
 
   var xhr = new XMLHttpRequest();
@@ -789,7 +602,7 @@ function commitFile(statusData, sha) {
         document.getElementById('customMessage').value = '';
         document.getElementById('customSubtitle').value = '';
       } else if (xhr.status === 409) {
-        addLog('Konflikt - versuche erneut...', 'error');
+        addLog('Konflikt - versuche erneut...', 'info');
         setTimeout(function() { updateGitHubFile(statusData); }, 1000);
       } else if (xhr.status === 401 || xhr.status === 403) {
         addLog('Keine Schreibberechtigung. Token pruefen!', 'error');
@@ -803,21 +616,15 @@ function commitFile(statusData, sha) {
 }
 
 // ===== HILFSFUNKTIONEN =====
-function showLoading(show) {
-  document.getElementById('loading').style.display = show ? 'flex' : 'none';
-}
-
+function showLoading(show) { document.getElementById('loading').style.display = show ? 'flex' : 'none'; }
 function addLog(msg, type) {
   var log = document.getElementById('statusLog');
-  var now = new Date();
-  var time = now.toLocaleTimeString('de-DE');
+  var time = new Date().toLocaleTimeString('de-DE');
   var entry = document.createElement('div');
   entry.className = 'log-entry log-' + (type || 'info');
   entry.textContent = '[' + time + '] ' + msg;
   log.insertBefore(entry, log.firstChild);
-  while (log.children.length > 50) {
-    log.removeChild(log.lastChild);
-  }
+  while (log.children.length > 50) log.removeChild(log.lastChild);
 }
 </script>
 </body>

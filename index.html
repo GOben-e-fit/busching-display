@@ -14,7 +14,6 @@ body {
   width: 1920px;
   height: 1080px;
   overflow: hidden;
-  padding: 30px 40px;
 }
 .main {
   width: 100%;
@@ -25,51 +24,49 @@ body {
   flex-direction: column;
 }
 
-/* ===== HEADER ===== */
-.header {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
-  -webkit-align-items: center;
-  align-items: center;
-  padding-bottom: 20px;
-  border-bottom: 4px solid #333333;
-  margin-bottom: 20px;
-}
-.logo { height: 120px; width: auto; }
-.status {
-  font-size: 80px;
+/* ===== STATUS BANNER - VOLLE BREITE, ZENTRIERT, GANZ OBEN ===== */
+.status-banner {
+  width: 100%;
+  text-align: center;
+  padding: 28px 0;
+  font-size: 110px;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 8px;
-  padding: 16px 50px;
-  border: 5px solid;
-  border-radius: 16px;
+  letter-spacing: 20px;
 }
 .status-open {
-  color: #00ee77;
-  border-color: #00ee77;
-  text-shadow: 0 0 30px rgba(0, 238, 119, 0.5);
+  background: #003d1f;
+  color: #00ff88;
+  border-bottom: 6px solid #00ff88;
+  text-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
 }
 .status-closed {
+  background: #3d0011;
   color: #ff3355;
-  border-color: #ff3355;
-  text-shadow: 0 0 30px rgba(255, 51, 85, 0.5);
+  border-bottom: 6px solid #ff3355;
+  text-shadow: 0 0 40px rgba(255, 51, 85, 0.6);
+}
+.status-lunch {
+  background: #3d2e00;
+  color: #ffcc00;
+  border-bottom: 6px solid #ffcc00;
+  text-shadow: 0 0 40px rgba(255, 204, 0, 0.6);
 }
 .status-warning {
-  color: #ffbb00;
-  border-color: #ffbb00;
-  text-shadow: 0 0 30px rgba(255, 187, 0, 0.5);
+  background: #3d2e00;
+  color: #ffcc00;
+  border-bottom: 6px solid #ffcc00;
+  text-shadow: 0 0 40px rgba(255, 204, 0, 0.6);
 }
 
-/* ===== CONTENT ===== */
-.content {
+/* ===== BODY CONTENT ===== */
+.body-content {
   display: -webkit-flex;
   display: flex;
   -webkit-flex: 1;
   flex: 1;
-  gap: 30px;
+  padding: 30px 50px 15px;
+  gap: 50px;
 }
 .col-left {
   -webkit-flex: 1;
@@ -90,25 +87,42 @@ body {
   gap: 20px;
 }
 
+/* ===== LOGO + FIRMENNAME ===== */
+.brand-row {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 10px;
+}
+.logo { height: 110px; width: auto; }
+.brand-name {
+  font-size: 48px;
+  font-weight: bold;
+  color: #ffd700;
+  letter-spacing: 2px;
+}
+
 /* ===== PANELS ===== */
 .panel {
   background: #1a1a1a;
   border: 2px solid #333333;
   border-radius: 16px;
-  padding: 25px 30px;
+  padding: 28px 35px;
 }
 .panel-title {
-  font-size: 44px;
+  font-size: 50px;
   font-weight: bold;
   color: #ffd700;
   text-transform: uppercase;
   letter-spacing: 3px;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
+  margin-bottom: 22px;
+  padding-bottom: 14px;
   border-bottom: 3px solid #444444;
 }
 
-/* ===== HOURS - EXTRA LARGE ===== */
+/* ===== HOURS - GROSS ===== */
 .hours-table {
   width: 100%;
 }
@@ -117,52 +131,52 @@ body {
   display: flex;
   -webkit-align-items: baseline;
   align-items: baseline;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .day-label {
   color: #ffd700;
   font-weight: bold;
-  font-size: 46px;
-  width: 280px;
+  font-size: 52px;
+  width: 300px;
   -webkit-flex-shrink: 0;
   flex-shrink: 0;
 }
 .time-val {
   color: #ffffff;
-  font-size: 48px;
+  font-size: 54px;
   font-weight: bold;
 }
 .time-separator {
-  height: 12px;
+  height: 16px;
 }
 
 /* ===== CONTACT ===== */
-.company-name {
-  font-size: 42px;
+.company-title {
+  font-size: 44px;
   font-weight: bold;
   color: #ffd700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
 }
 .contact-line {
-  font-size: 36px;
+  font-size: 38px;
   line-height: 1.6;
   color: #cccccc;
 }
 .contact-phone {
   color: #ffffff;
   font-weight: bold;
-  font-size: 48px;
+  font-size: 50px;
   display: block;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 .contact-email {
   color: #ffffff;
   font-weight: bold;
-  font-size: 36px;
+  font-size: 38px;
   display: block;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 /* ===== NOTICE ===== */
@@ -170,47 +184,25 @@ body {
   background: #1a1a0a;
   border-left: 6px solid #ffd700;
   border-radius: 12px;
-  padding: 20px 25px;
-  font-size: 34px;
+  padding: 22px 28px;
+  font-size: 36px;
   color: #ffd700;
   line-height: 1.4;
 }
 
-/* ===== EMERGENCY ===== */
-.emergency {
-  background: #1a0a0a;
-  border-left: 6px solid #ff3355;
-  border-radius: 12px;
-  padding: 20px 25px;
-}
-.emergency-title {
-  color: #ff3355;
-  font-weight: bold;
-  font-size: 38px;
-  margin-bottom: 10px;
-}
-.emergency-details {
-  color: #ffffff;
-  font-size: 40px;
-  font-weight: bold;
-  line-height: 1.5;
-}
-
-/* ===== SPECIAL TEXT ===== */
+/* ===== CUSTOM MESSAGE ===== */
 .big-message {
-  font-size: 60px;
+  font-size: 64px;
   font-weight: bold;
   text-align: center;
   line-height: 1.4;
   padding: 20px 0;
 }
-.big-message.green { color: #00ee77; }
+.big-message.green { color: #00ff88; }
 .big-message.red { color: #ff3355; }
-.big-message.yellow { color: #ffbb00; }
-.big-message.white { color: #ffffff; }
-
+.big-message.yellow { color: #ffcc00; }
 .subtitle-text {
-  font-size: 38px;
+  font-size: 40px;
   color: #aaaaaa;
   text-align: center;
   margin-top: 10px;
@@ -224,9 +216,8 @@ body {
   justify-content: space-between;
   -webkit-align-items: center;
   align-items: center;
-  padding-top: 15px;
+  padding: 12px 50px;
   border-top: 3px solid #333333;
-  margin-top: 15px;
 }
 .footer-left {
   font-size: 30px;
@@ -241,33 +232,31 @@ body {
 </head>
 <body>
 <div class="main" id="display-content">
-  <!-- Content wird dynamisch aus status.json geladen -->
 </div>
 
 <script>
 // ===== KONFIGURATION =====
 var CONFIG = {
-  // Status-Datei wird aus dem gleichen Verzeichnis geladen
   statusUrl: 'status.json',
-  // Refresh-Intervall in Millisekunden (15 Sekunden)
   refreshInterval: 15000,
-  // Öffnungszeiten (für lokale Zeitsteuerung als Fallback)
   hours: {
-    1: [{open: '10:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Montag
-    2: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Dienstag
-    3: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Mittwoch
-    4: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Donnerstag
-    5: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}], // Freitag
-    6: [],  // Samstag - geschlossen
-    0: []   // Sonntag - geschlossen
-  }
+    1: [{open: '10:00', close: '13:00'}, {open: '14:00', close: '18:00'}],
+    2: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}],
+    3: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}],
+    4: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}],
+    5: [{open: '09:00', close: '13:00'}, {open: '14:00', close: '18:00'}],
+    6: [],
+    0: []
+  },
+  lunchBreak: {start: '13:00', end: '14:00'}
 };
 
-// ===== TEMPLATES =====
+// ===== STATUS-ANZEIGE =====
 function getStatusClass(mode) {
   switch(mode) {
     case 'open': return 'status-open';
     case 'closed': return 'status-closed';
+    case 'lunch': return 'status-lunch';
     case 'warning': return 'status-warning';
     default: return 'status-open';
   }
@@ -275,10 +264,11 @@ function getStatusClass(mode) {
 
 function getStatusText(mode) {
   switch(mode) {
-    case 'open': return 'GEOEFFNET';
+    case 'open': return 'GE\u00D6FFNET';
     case 'closed': return 'GESCHLOSSEN';
+    case 'lunch': return 'MITTAGSPAUSE';
     case 'warning': return 'HINWEIS';
-    default: return 'GEOEFFNET';
+    default: return 'GE\u00D6FFNET';
   }
 }
 
@@ -288,49 +278,68 @@ function renderDisplay(data) {
   var customSubtitle = data.customSubtitle || '';
 
   var html = '';
-  html += '<div class="header">';
-  html += '  <div class="status ' + getStatusClass(mode) + '">' + getStatusText(mode) + '</div>';
-  html += '  <img src="logo.png" alt="Busching" class="logo">';
-  html += '</div>';
-  html += '<div class="content">';
-  html += '  <div class="col-left">';
-  html += '    <div class="panel">';
-  html += '      <div class="panel-title">Oeffnungszeiten</div>';
-  html += '      <div class="hours-table">';
-  html += '        <div class="hours-row"><span class="day-label">Montag:</span><span class="time-val">10:00 - 13:00</span></div>';
-  html += '        <div class="hours-row"><span class="day-label"></span><span class="time-val">14:00 - 18:00 Uhr</span></div>';
-  html += '        <div class="time-separator"></div>';
-  html += '        <div class="hours-row"><span class="day-label">Di - Fr:</span><span class="time-val">09:00 - 13:00</span></div>';
-  html += '        <div class="hours-row"><span class="day-label"></span><span class="time-val">14:00 - 18:00 Uhr</span></div>';
-  html += '      </div>';
-  html += '    </div>';
 
-  // Custom Message anzeigen falls vorhanden
+  // STATUS BANNER - volle Breite, zentriert, ganz oben
+  html += '<div class="status-banner ' + getStatusClass(mode) + '">' + getStatusText(mode) + '</div>';
+
+  // BODY CONTENT
+  html += '<div class="body-content">';
+
+  // LINKE SPALTE
+  html += '<div class="col-left">';
+
+  // Logo + Firmenname
+  html += '<div class="brand-row">';
+  html += '  <img src="logo.png" alt="Busching" class="logo">';
+  html += '  <div class="brand-name">Busching Autoteile</div>';
+  html += '</div>';
+
+  // Oeffnungszeiten
+  html += '<div class="panel">';
+  html += '  <div class="panel-title">\u00D6ffnungszeiten</div>';
+  html += '  <div class="hours-table">';
+  html += '    <div class="hours-row"><span class="day-label">Montag:</span><span class="time-val">10:00 - 13:00</span></div>';
+  html += '    <div class="hours-row"><span class="day-label"></span><span class="time-val">14:00 - 18:00 Uhr</span></div>';
+  html += '    <div class="time-separator"></div>';
+  html += '    <div class="hours-row"><span class="day-label">Di - Fr:</span><span class="time-val">09:00 - 13:00</span></div>';
+  html += '    <div class="hours-row"><span class="day-label"></span><span class="time-val">14:00 - 18:00 Uhr</span></div>';
+  html += '  </div>';
+  html += '</div>';
+
+  html += '</div>';
+
+  // RECHTE SPALTE
+  html += '<div class="col-right">';
+
+  // Kontakt
+  html += '<div class="panel">';
+  html += '  <div class="company-title">Busching Autoteile GmbH</div>';
+  html += '  <div class="contact-line">';
+  html += '    Otto-Suhr-Allee 29, 10585 Berlin';
+  html += '    <span class="contact-phone">Tel. 030 - 342 20 23</span>';
+  html += '    <span class="contact-email">info@busching-autoteile.com</span>';
+  html += '  </div>';
+  html += '</div>';
+
+  // Custom Message oder Hinweis
   if (customMessage) {
-    html += '    <div class="panel">';
-    var msgColor = mode === 'closed' ? 'red' : (mode === 'warning' ? 'yellow' : 'green');
-    html += '      <div class="big-message ' + msgColor + '">' + customMessage + '</div>';
+    html += '<div class="panel">';
+    var msgColor = mode === 'closed' ? 'red' : (mode === 'lunch' ? 'yellow' : (mode === 'warning' ? 'yellow' : 'green'));
+    html += '  <div class="big-message ' + msgColor + '">' + customMessage + '</div>';
     if (customSubtitle) {
-      html += '      <div class="subtitle-text">' + customSubtitle + '</div>';
+      html += '  <div class="subtitle-text">' + customSubtitle + '</div>';
     }
-    html += '    </div>';
+    html += '</div>';
+  } else {
+    html += '<div class="notice">';
+    html += '  Dar\u00FCber hinaus \u00F6ffnen wir bei Bedarf (z.B. bei Frostwetter) oder nach telefonischer Vereinbarung.';
+    html += '</div>';
   }
 
-  html += '  </div>';
-  html += '  <div class="col-right">';
-  html += '    <div class="panel">';
-  html += '      <div class="company-name">Busching Autoteile GmbH</div>';
-  html += '      <div class="contact-line">';
-  html += '        Otto-Suhr-Allee 29, 10585 Berlin';
-  html += '        <span class="contact-phone">Tel. 030 - 342 20 23</span>';
-  html += '        <span class="contact-email">info@busching-autoteile.com</span>';
-  html += '      </div>';
-  html += '    </div>';
-  html += '    <div class="notice">';
-  html += '      Darueber hinaus oeffnen wir bei Bedarf (z.B. bei Frostwetter) oder nach telefonischer Vereinbarung.';
-  html += '    </div>';
-  html += '  </div>';
   html += '</div>';
+  html += '</div>';
+
+  // FOOTER
   html += '<div class="footer">';
   html += '  <div class="footer-left">Busching Autoteile GmbH &bull; Otto-Suhr-Allee 29 &bull; 10585 Berlin</div>';
   html += '  <div class="footer-phone">Tel. 030 - 342 20 23</div>';
@@ -356,13 +365,11 @@ function loadStatus() {
           lastStatus = data;
           renderDisplay(data);
         } catch(e) {
-          // JSON Parse-Fehler - Fallback auf lokale Zeitsteuerung
           if (!lastStatus) {
             renderDisplay(getAutoStatus());
           }
         }
       } else {
-        // Datei nicht gefunden oder Fehler - Fallback auf lokale Zeitsteuerung
         if (!lastStatus) {
           renderDisplay(getAutoStatus());
         }
@@ -375,7 +382,6 @@ function loadStatus() {
 // ===== LOKALE ZEITSTEUERUNG (FALLBACK) =====
 function getAutoStatus() {
   var now = new Date();
-  // Berliner Zeit berechnen (UTC+1 bzw UTC+2 bei Sommerzeit)
   var berlinTime = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/Berlin'}));
   var day = berlinTime.getDay();
   var hours = berlinTime.getHours();
@@ -383,8 +389,20 @@ function getAutoStatus() {
   var currentMinutes = hours * 60 + minutes;
 
   var todayHours = CONFIG.hours[day] || [];
-  var isOpen = false;
 
+  // Kein Arbeitstag
+  if (todayHours.length === 0) {
+    return { mode: 'closed', customMessage: '', customSubtitle: '', source: 'auto-local' };
+  }
+
+  // Mittagspause pruefen (13:00 - 14:00)
+  var lunchStart = 13 * 60;
+  var lunchEnd = 14 * 60;
+  if (todayHours.length > 1 && currentMinutes >= lunchStart && currentMinutes < lunchEnd) {
+    return { mode: 'lunch', customMessage: '', customSubtitle: '', source: 'auto-local' };
+  }
+
+  // Oeffnungszeiten pruefen
   for (var i = 0; i < todayHours.length; i++) {
     var slot = todayHours[i];
     var openParts = slot.open.split(':');
@@ -392,27 +410,18 @@ function getAutoStatus() {
     var openMin = parseInt(openParts[0]) * 60 + parseInt(openParts[1]);
     var closeMin = parseInt(closeParts[0]) * 60 + parseInt(closeParts[1]);
     if (currentMinutes >= openMin && currentMinutes < closeMin) {
-      isOpen = true;
-      break;
+      return { mode: 'open', customMessage: '', customSubtitle: '', source: 'auto-local' };
     }
   }
 
-  return {
-    mode: isOpen ? 'open' : 'closed',
-    customMessage: '',
-    customSubtitle: '',
-    source: 'auto'
-  };
+  return { mode: 'closed', customMessage: '', customSubtitle: '', source: 'auto-local' };
 }
 
 // ===== START =====
-// Sofort laden
 loadStatus();
-
-// Alle 15 Sekunden aktualisieren
 setInterval(loadStatus, CONFIG.refreshInterval);
 
-// Zusätzlich: Seite komplett neu laden alle 5 Minuten (gegen Memory-Leaks auf Samsung Tizen)
+// Seite komplett neu laden alle 5 Minuten (gegen Memory-Leaks auf Samsung Tizen)
 setTimeout(function() {
   setInterval(function() {
     window.location.reload(true);
