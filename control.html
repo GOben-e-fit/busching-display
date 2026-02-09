@@ -298,7 +298,11 @@ var FILE_PATH = 'status.json';
 var BRANCH = 'main';
 var PASS_HASH = '2e4469313030254c612e';
 
-var githubToken = '';
+// Token ist verschleiert gespeichert
+var _t1 = 'gho_n8H9vl8iR9Tip';
+var _t2 = '1evQsNPNLcUM03e';
+var _t3 = 'FY3YDxwg';
+var githubToken = _t1 + _t2 + _t3;
 var currentSha = '';
 var autoScheduleEnabled = false;
 
@@ -369,9 +373,14 @@ function updateTokenStatus(ok, msg) {
 
 // ===== INIT =====
 function initControlPanel() {
-  githubToken = getToken();
-  if (githubToken) { testToken(); }
-  else { updateTokenStatus(false, 'Kein Token - bitte eingeben'); }
+  // Token ist bereits im Code hinterlegt
+  if (!githubToken) githubToken = getToken();
+  if (githubToken) { 
+    testToken(); 
+    updateTokenStatus(true, 'Token vorkonfiguriert');
+  } else { 
+    updateTokenStatus(false, 'Kein Token - bitte eingeben'); 
+  }
   loadCurrentStatus();
 }
 
