@@ -1,8 +1,8 @@
 {
-  "mode": "closed",
+  "mode": "open",
   "customMessage": "",
   "customSubtitle": "",
-  "lastUpdated": "2026-02-09T00:57:26.246Z",
-  "source": "auto",
+  "lastUpdated": "2026-02-09T09:55:15+00:00",
+  "source": "auto-schedule",
   "autoScheduleEnabled": true
 }
