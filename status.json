@@ -1,8 +1,8 @@
 {
-  "mode": "open",
-  "customMessage": "",
+  "mode": "warning",
+  "customMessage": "Achtung Verspätung 5 Minuten",
   "customSubtitle": "",
-  "lastUpdated": "2026-02-09T14:59:44.848Z",
-  "source": "auto",
-  "autoScheduleEnabled": true
+  "lastUpdated": "2026-02-09T15:06:44.188Z",
+  "source": "manual",
+  "autoScheduleEnabled": false
 }
