@@ -1,8 +1,8 @@
 {
-  "mode": "warning",
-  "customMessage": "Heute ab 10.00 Uhr geöffnet. ",
+  "mode": "open",
+  "customMessage": "",
   "customSubtitle": "",
-  "lastUpdated": "2026-02-10T08:39:30.780Z",
+  "lastUpdated": "2026-02-10T09:55:19.299Z",
   "source": "manual",
   "autoScheduleEnabled": false
 }
