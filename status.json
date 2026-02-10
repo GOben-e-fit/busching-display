@@ -1,8 +1,8 @@
 {
   "mode": "warning",
-  "customMessage": "Verspätung um 45 Minuten",
+  "customMessage": "",
   "customSubtitle": "",
-  "lastUpdated": "2026-02-10T08:09:21.693Z",
+  "lastUpdated": "2026-02-10T08:38:48.465Z",
   "source": "manual",
   "autoScheduleEnabled": false
 }
