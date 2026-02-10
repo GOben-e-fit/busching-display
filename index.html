@@ -364,6 +364,14 @@ function loadStatus() {
         try {
           var data = JSON.parse(xhr.responseText);
           lastStatus = data;
+          // KERNLOGIK: Wenn Zeitsteuerung aktiv ist, berechnet das Display
+          // den Modus SELBST anhand der lokalen Uhrzeit - sofort und zuverlaessig!
+          if (data.autoScheduleEnabled === true) {
+            var autoData = getAutoStatus();
+            // Behalte die restlichen Felder aus status.json bei
+            data.mode = autoData.mode;
+            data.source = 'auto-local';
+          }
           renderDisplay(data);
         } catch(e) {
           if (!lastStatus) {
@@ -371,9 +379,8 @@ function loadStatus() {
           }
         }
       } else {
-        if (!lastStatus) {
-          renderDisplay(getAutoStatus());
-        }
+        // Wenn status.json nicht geladen werden kann, lokale Zeitsteuerung nutzen
+        renderDisplay(getAutoStatus());
       }
     }
   };
