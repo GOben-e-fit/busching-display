@@ -2,7 +2,7 @@
   "mode": "closed",
   "customMessage": "",
   "customSubtitle": "",
-  "lastUpdated": "2026-02-10T17:10:07.162Z",
-  "source": "manual",
-  "autoScheduleEnabled": false
+  "lastUpdated": "2026-02-10T17:10:14.823Z",
+  "source": "auto",
+  "autoScheduleEnabled": true
 }
