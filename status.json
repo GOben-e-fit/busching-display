@@ -1,8 +1,8 @@
 {
-  "mode": "warning",
-  "customMessage": "Wir haben heute ab 09:15 Uhr geöffnet. ",
-  "customSubtitle": "Danke für Ihr Verständnis.",
-  "lastUpdated": "2026-04-21T06:53:08.879Z",
+  "mode": "closed",
+  "customMessage": "",
+  "customSubtitle": "",
+  "lastUpdated": "2026-04-21T16:21:59.742Z",
   "source": "manual",
   "autoScheduleEnabled": false
 }
