@@ -1,8 +1,8 @@
 {
-  "mode": "warning",
-  "customMessage": "WIr öffnen heute 09:30 Uhr. ",
-  "customSubtitle": "Danke für Ihr Verständnis.",
-  "lastUpdated": "2026-05-06T06:16:04.471Z",
+  "mode": "open",
+  "customMessage": "",
+  "customSubtitle": "",
+  "lastUpdated": "2026-05-06T07:44:31.320Z",
   "source": "manual",
   "autoScheduleEnabled": false
 }
