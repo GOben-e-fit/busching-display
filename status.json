@@ -1,8 +1,8 @@
 {
-  "mode": "warning",
-  "customMessage": "14:10 Uhr wieder da.  Danke für Ihr Verständnis.",
+  "mode": "open",
+  "customMessage": "",
   "customSubtitle": "",
-  "lastUpdated": "2026-06-02T12:01:56.654Z",
+  "lastUpdated": "2026-06-02T12:53:34.898Z",
   "source": "manual",
   "autoScheduleEnabled": false
 }
