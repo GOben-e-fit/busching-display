@@ -1,8 +1,8 @@
 {
-  "mode": "warning",
-  "customMessage": "Moin! Leider wegen Stau 30min Verspätung.",
+  "mode": "open",
+  "customMessage": "",
   "customSubtitle": "",
-  "lastUpdated": "2026-06-23T06:32:49.365Z",
+  "lastUpdated": "2026-06-23T07:26:49.852Z",
   "source": "manual",
   "autoScheduleEnabled": false
 }
