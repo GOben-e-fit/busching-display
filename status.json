@@ -1,8 +1,8 @@
 {
   "mode": "closed",
-  "customMessage": "",
-  "customSubtitle": "",
-  "lastUpdated": "2026-10-12T23:17:53+00:00",
-  "source": "auto-schedule",
-  "autoScheduleEnabled": true
+  "customMessage": "Heute erst ab 10:00 Uhr ge\u00f6ffnet",
+  "customSubtitle": "Aufgrund der Verkehrssituation. Vielen Dank f\u00fcr Ihr Verst\u00e4ndnis.",
+  "lastUpdated": "2026-10-13T07:08:41+00:00",
+  "source": "manual",
+  "autoScheduleEnabled": false
 }
