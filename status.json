@@ -4,5 +4,6 @@
   "customSubtitle": "Aufgrund der Verkehrssituation. Vielen Dank f\u00fcr Ihr Verst\u00e4ndnis.",
   "lastUpdated": "2026-10-13T07:08:41+00:00",
   "source": "manual",
-  "autoScheduleEnabled": false
+  "autoScheduleEnabled": false,
+  "overrideUntil": "2026-10-13T08:00:00Z"
 }

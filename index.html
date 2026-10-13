@@ -275,8 +275,8 @@ function getStatusText(mode) {
 
 function renderDisplay(data) {
   var mode = data.mode || 'open';
-  var customMessage = data.customMessage || '';
-  var customSubtitle = data.customSubtitle || '';
+  var customMessage = escapeText(data.customMessage || '');
+  var customSubtitle = escapeText(data.customSubtitle || '');
 
   var html = '';
 
@@ -351,39 +351,75 @@ function renderDisplay(data) {
 
 // ===== AUTO-REFRESH MIT CACHE-BUSTING =====
 var lastStatus = null;
+var cacheKey = 'busching-display-status-v2';
+
+function escapeText(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function validStatus(data) {
+  return data && ['open', 'closed', 'warning', 'lunch'].indexOf(data.mode) >= 0
+    && typeof data.customMessage === 'string' && data.customMessage.length <= 160
+    && typeof data.customSubtitle === 'string' && data.customSubtitle.length <= 240
+    && typeof data.autoScheduleEnabled === 'boolean'
+    && (!data.overrideUntil || isFinite(Date.parse(data.overrideUntil)));
+}
+
+function effectiveStatus(data) {
+  if (!data) return getAutoStatus();
+  if (data.overrideUntil) {
+    if (new Date().getTime() >= Date.parse(data.overrideUntil)) return getAutoStatus();
+    return data;
+  }
+  if (data.autoScheduleEnabled) {
+    var current = getAutoStatus();
+    current.customMessage = data.customMessage;
+    current.customSubtitle = data.customSubtitle;
+    return current;
+  }
+  return data;
+}
+
+try {
+  var cached = JSON.parse(localStorage.getItem(cacheKey));
+  if (validStatus(cached)) lastStatus = cached;
+} catch (ignore) {}
+
+var renderedStatus = '';
+function renderLastStatus() {
+  var current = effectiveStatus(lastStatus);
+  var signature = JSON.stringify([current.mode, current.customMessage, current.customSubtitle]);
+  if (signature !== renderedStatus) {
+    renderDisplay(current);
+    renderedStatus = signature;
+  }
+}
 
 function loadStatus() {
   var url = CONFIG.statusUrl + '?t=' + new Date().getTime();
   var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
-  xhr.setRequestHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  xhr.setRequestHeader('Pragma', 'no-cache');
+  xhr.timeout = 7000;
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         try {
           var data = JSON.parse(xhr.responseText);
+          if (!validStatus(data)) throw new Error('Invalid display status');
           lastStatus = data;
-          // KERNLOGIK: Wenn Zeitsteuerung aktiv ist, berechnet das Display
-          // den Modus SELBST anhand der lokalen Uhrzeit - sofort und zuverlaessig!
-          if (data.autoScheduleEnabled === true) {
-            var autoData = getAutoStatus();
-            // Behalte die restlichen Felder aus status.json bei
-            data.mode = autoData.mode;
-            data.source = 'auto-local';
-          }
-          renderDisplay(data);
+          try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch (ignore) {}
+          renderLastStatus();
         } catch(e) {
-          if (!lastStatus) {
-            renderDisplay(getAutoStatus());
-          }
+          renderLastStatus();
         }
       } else {
-        // Wenn status.json nicht geladen werden kann, lokale Zeitsteuerung nutzen
-        renderDisplay(getAutoStatus());
+        renderLastStatus();
       }
     }
   };
+  xhr.onerror = renderLastStatus;
+  xhr.ontimeout = renderLastStatus;
   xhr.send();
 }
 
@@ -426,8 +462,10 @@ function getAutoStatus() {
 }
 
 // ===== START =====
+renderLastStatus();
 loadStatus();
 setInterval(loadStatus, CONFIG.refreshInterval);
+setInterval(renderLastStatus, 1000);
 
 // Seite komplett neu laden alle 5 Minuten (gegen Memory-Leaks auf Samsung Tizen)
 setTimeout(function() {
