@@ -6,68 +6,21 @@
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="refresh" content="0; url=https://inventur-pwa.vercel.app/display-control">
   <title>Display steuern · Busching Autoteile</title>
   <style>
-    :root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172033; background: #f3f5f7; }
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 24px 16px; line-height: 1.6; }
-    main { max-width: 720px; margin: 0 auto; }
-    header { margin: 8px 0 24px; }
-    .logo { display: block; width: auto; max-width: 100%; height: 54px; object-fit: contain; object-position: left; margin-bottom: 20px; }
-    h1 { font-size: clamp(1.65rem, 5vw, 2.2rem); line-height: 1.2; margin: 0 0 12px; }
-    h2 { font-size: 1.15rem; margin: 0 0 12px; }
-    p { margin: 0 0 16px; }
-    .card { background: #fff; border: 1px solid #d7dce2; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
-    .primary { display: inline-block; padding: 12px 18px; border-radius: 9px; background: #a81f2a; color: #fff; font-weight: 700; text-decoration: none; }
-    .primary:hover { background: #861924; }
-    a { color: #8a1923; text-underline-offset: 3px; }
+    body { font-family: system-ui, sans-serif; background: #f3f5f7; color: #172033; margin: 0; padding: 24px 16px; line-height: 1.6; }
+    main { max-width: 640px; margin: 24px auto; padding: 24px; background: white; border-radius: 16px; }
+    img { height: 54px; max-width: 100%; }
+    a { display: inline-block; padding: 12px 18px; background: #a81f2a; color: white; border-radius: 9px; font-weight: bold; }
     a:focus-visible { outline: 3px solid #1b66bb; outline-offset: 4px; }
-    ol { margin: 0; padding-left: 22px; }
-    li { padding-left: 4px; margin-bottom: 12px; }
-    li:last-child { margin-bottom: 0; }
-    dl { margin: 20px 0; }
-    dt { font-weight: 700; margin-top: 16px; }
-    dd { margin: 4px 0 0; }
-    code { font-size: .9em; background: #edf0f4; border-radius: 4px; padding: 1px 5px; overflow-wrap: anywhere; }
-    .note { border-left: 4px solid #a81f2a; padding-left: 14px; margin: 20px 0 0; }
-    .muted { color: #465266; font-size: .94rem; }
-    footer { padding: 0 4px 16px; }
-    @media (max-width: 420px) { body { padding: 16px 12px; } .card { padding: 20px 16px; } .primary { display: block; text-align: center; } }
   </style>
 </head>
-<body>
-  <main>
-    <header>
-      <img class="logo" src="logo.png" alt="Busching Autoteile">
-      <h1>Display steuern</h1>
-      <p>Öffnungsstatus und Nachricht über den vorhandenen GitHub-Workflow ändern.</p>
-    </header>
-    <section class="card" aria-labelledby="access-heading">
-      <h2 id="access-heading">Mit GitHub anmelden</h2>
-      <p>Sie benötigen ein GitHub-Konto mit Schreibberechtigung für das Repository <strong>GOben-e-fit/busching-display</strong>. Anmeldung und Berechtigungsprüfung erfolgen bei GitHub.</p>
-      <a class="primary" href="https://github.com/GOben-e-fit/busching-display/actions/workflows/update-status.yml">Display-Steuerung auf GitHub öffnen</a>
-      <p class="muted note">Fehlt dort die Schaltfläche „Run workflow“, prüfen Sie Ihre GitHub-Anmeldung und lassen Sie die Repository-Berechtigung von der Projektverwaltung prüfen.</p>
-    </section>
-    <section class="card" aria-labelledby="instructions-heading">
-      <h2 id="instructions-heading">Status ändern</h2>
-      <ol>
-        <li>Den Workflow <strong>Update Display Status</strong> über den Link öffnen.</li>
-        <li>Auf <strong>Run workflow</strong> klicken und den Branch <code>main</code> auswählen.</li>
-        <li>Die gewünschten Werte auswählen und mit <strong>Run workflow</strong> starten.</li>
-        <li>Den erfolgreichen Abschluss des Laufs abwarten und anschließend <a href="./">die Displayanzeige prüfen</a>.</li>
-      </ol>
-      <dl>
-        <dt>Display mode (open/closed/warning)</dt>
-        <dd><code>open</code> = geöffnet · <code>closed</code> = geschlossen · <code>warning</code> = Hinweis.</dd>
-        <dt>Custom message to display (optional)</dt>
-        <dd>Eigene Hauptnachricht für das Display. Das Feld kann leer bleiben.</dd>
-        <dt>Custom subtitle (optional)</dt>
-        <dd>Zusätzlicher Text unter der Hauptnachricht. Das Feld kann leer bleiben.</dd>
-        <dt>Enable auto schedule</dt>
-        <dd><code>true</code> aktiviert den automatischen Zeitplan; <code>false</code> deaktiviert ihn. Bei aktivem Zeitplan kann der nächste geplante Lauf den manuell gewählten Status ändern.</dd>
-      </dl>
-    </section>
-    <footer><a href="./">Zur Displayanzeige</a></footer>
-  </main>
-</body>
+<body><main>
+  <img src="logo.png" alt="Busching Autoteile">
+  <h1>Display steuern</h1>
+  <p>Die Steuerung öffnet sich mit Ihrem vorhandenen Inventur-Zugang.</p>
+  <p>Status wählen, Nachricht eingeben und „Einstellungen übernehmen“ drücken.</p>
+  <a href="https://inventur-pwa.vercel.app/display-control">Display-Steuerung öffnen</a>
+</main></body>
 </html>
